@@ -1,0 +1,35 @@
+# Build
+bin/
+obj/
+out/
+
+# User-specific files
+*.vs
+*.user
+*.suo
+*.vscode/
+*.swp
+*.sln.cache
+
+# Logs
+logs/
+*.log
+*.tlog
+
+# Database (SQLite)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Entity Framework Migrations
+Migrations/
+
+# Secrets
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# Publish outputs
+publish/
+wwwroot/
