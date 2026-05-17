@@ -1,12 +1,9 @@
 ﻿using Application.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.Mappers;
+using Application.Models;
+using Application.Models.Requests;
 using Domain.IRepositories;
 using Domain.Models;
-using Application.Models.Requests;
 
 namespace Application.Services
 {
@@ -19,41 +16,54 @@ namespace Application.Services
             _garmentRepository = garmentRepository;
         }
 
-        public async Task<List<Garment>> GetGarmentsAsync()
+        public async Task<List<GarmentDTO>> GetAllAsync()
         {
-            return await _garmentRepository.GetAllGarmentsWithOperationsIncludedAsync();
+            var garments = await _garmentRepository.GetAllGarmentsWithOperationsIncludedAsync();
+            var garmentsListDto = garments.Select(GarmentMapper.ToDto).ToList();
 
+            return garmentsListDto;
         }
 
-        public async Task<Garment?> GetByIdAsync(int id)
+        public async Task<GarmentDTO> GetByIdAsync(int id)
         {
-            return await _garmentRepository.GetByIdAsync(id);
-        }
-
-        public async Task<Garment> AddAsync(AddGarmentDTO addGarmentDTO)
-        {
-            var garment = new Garment
-            (
-                addGarmentDTO.GarmentName,
-                addGarmentDTO.GarmentDescription,
-              addGarmentDTO.Operations.Select(op => new Operation(
-                    op.OperationName,
-                    op.OperationDescription,
-                    op.TimeAllowed)).ToList());
-
-            await _garmentRepository.AddAsync(garment);
-            return garment;
-        }
-
-        public async Task<Garment?> UpdateAsync(int id)
-        {
-            return await _garmentRepository.UpdateAsync(id);
+            var garment = await _garmentRepository.GetByIdAsync(id);
+            var garmentDto = GarmentMapper.ToDto(garment);
+            return garmentDto;
         }
 
         public async Task DeleteAsync(int id)
         {
+
             await _garmentRepository.DeleteAsync(id);
         }
+
+        public async Task<GarmentDTO> AddAsync(CreateGarmentDTO garmentDTO)
+        {
+            var garment = new Garment
+            {
+                GarmentName = garmentDTO.GarmentName,
+                GarmentDescription = garmentDTO.GarmentDescription,
+                Operations = garmentDTO.Operations?.Select(o => new Operation
+                {
+                    OperationName = o.OperationName,
+                    OperationDescription = o.OperationDescription,
+                    BaseTime = o.BaseTime
+                }).ToList() ?? new List<Operation>()
+            };
+
+            var savedGarment = await _garmentRepository.AddAsync(garment);
+
+            return GarmentMapper.ToDto(savedGarment);
+        }
+
+        public async Task UpdateAsync(UpdateGarmentDTO updateGarmentDTO, int id)
+        {
+            throw new NotImplementedException();
+
+        }
+
+
+
     }
 }
 

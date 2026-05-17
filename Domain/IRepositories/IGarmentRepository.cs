@@ -1,17 +1,17 @@
 ﻿using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.IRepositories
 {
-    public interface IGarmentRepository : IRepositoryBase<Garment>
+    public interface IGarmentRepository
     {
 
-        public Task<List<Garment>> GetAllGarmentsWithOperationsIncludedAsync();
-
+        Task<List<Garment>> GetAllGarmentsWithOperationsIncludedAsync();
+        Task<List<Garment>> GetAllAsync();
+        Task<Garment?> GetByIdAsync(int id);
+        Task<Garment?> GetByIdWithOperationsAsync(int id);
+        Task<Garment> AddAsync(Garment entity);
+        Task UpdateAsync(Garment entity);
+        Task DeleteAsync(int id);
 
     }
 }

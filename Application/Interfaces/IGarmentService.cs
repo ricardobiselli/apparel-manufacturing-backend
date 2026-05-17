@@ -1,23 +1,14 @@
-﻿using Application.Models.Requests;
-using Domain.IRepositories;
-using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Models;
+using Application.Models.Requests;
 
 namespace Application.Interfaces
 {
     public interface IGarmentService
-    { 
-        public Task<List<Garment>> GetGarmentsAsync();
-        public Task<Garment?> GetByIdAsync(int id);
-        public Task<Garment> AddAsync(AddGarmentDTO addGarmentDTO);
-        public Task<Garment?> UpdateAsync(int id);
-        public Task DeleteAsync(int id);
-
+    {
+        Task<GarmentDTO> AddAsync(CreateGarmentDTO addGarmentDTO);
+        Task<List<GarmentDTO>> GetAllAsync();
+        Task<GarmentDTO> GetByIdAsync(int id);
+        Task DeleteAsync(int id);
+        Task UpdateAsync(UpdateGarmentDTO updateGarmentDTO, int id);
     }
-
-
 }

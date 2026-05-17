@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-
-    namespace Domain.Models
+﻿namespace Domain.Models
+{
+    public class Operation
     {
-        public class Operation
+        public int OperationId { get; set; }
+        public string OperationName { get; set; }
+        public string OperationDescription { get; set; }
+        public Garment Garment { get; set; }
+        public int GarmentId { get; set; }
+
+        public double BaseTime { get; set; }
+
+        public Operation() { }
+
+        public Operation(string operationName, string operationDescription, double baseTime, double bundleAllowance, double workerAllowance)
         {
-            public int OperationId { get; set; }
-            public string OperationName { get; set; } 
-            public string OperationDescription { get; set; }
-            public decimal TimeAllowed { get; set; }
-            public Garment Garment { get; set; }
-            public int GarmentId { get; set; }
-
-
-            public Operation(string operationName, string operationDescription, decimal timeAllowed) {
-                OperationName = operationName;  
-                OperationDescription = operationDescription;
-                TimeAllowed = timeAllowed;
-        
-            }
+            OperationName = operationName;
+            OperationDescription = operationDescription;
+            BaseTime = baseTime;
         }
     }
+}
