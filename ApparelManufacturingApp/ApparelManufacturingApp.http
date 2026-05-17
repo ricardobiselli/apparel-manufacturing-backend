@@ -1,0 +1,10 @@
+@ApparelManufacturingApp_HostAddress = https://localhost:7050
+
+GET {{ApparelManufacturingApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{ApparelManufacturingApp_HostAddress}}/api/garment/GetAll
+
+###

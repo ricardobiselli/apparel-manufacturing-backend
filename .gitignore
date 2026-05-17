@@ -4,10 +4,10 @@ obj/
 out/
 
 # User-specific files
-*.vs
+.vs/
 *.user
 *.suo
-*.vscode/
+.vscode/
 *.swp
 *.sln.cache
 
@@ -18,17 +18,18 @@ logs/
 
 # Database (SQLite)
 *.db
+*.db-shm
+*.db-wal
 *.db-journal
 *.sqlite
 *.sqlite3
-
-# Entity Framework Migrations
-Migrations/
 
 # Secrets
 appsettings.Development.json
 appsettings.Local.json
 secrets.json
+.env
+.env.local
 
 # Publish outputs
 publish/
