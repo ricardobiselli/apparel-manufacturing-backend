@@ -31,7 +31,8 @@ public class OperationLogService : IOperationLogService
     public async Task<MachineExceptionLogDTO> AddMachineExceptionLogAsync(AddMachineExceptionLogDTO addMachineExceptionLogDTO)
     {
         var exceptionType = addMachineExceptionLogDTO.Type;
-
+        Console.WriteLine($"DTO TYPE NULL?: {addMachineExceptionLogDTO.Type}");
+        Console.WriteLine($"DTO TYPE INT: {(int)addMachineExceptionLogDTO.Type}");
 
 
         var machineExceptionLog = MachineExceptionLogMapper.ToEntity(addMachineExceptionLogDTO);
@@ -41,6 +42,8 @@ public class OperationLogService : IOperationLogService
         {
             var currentMachineSession = await _machineSessionRepository.GetByIdAsync(addMachineExceptionLogDTO.MachineSessionId);
             currentMachineSession.EndedAt = DateTime.UtcNow;
+            currentMachineSession.Status = MachineSessionStatus.Completed;
+            await _machineSessionRepository.UpdateAsync(currentMachineSession);
         }
 
         var response = await _operationLogRepository.AddMachineExceptionLogAsync(machineExceptionLog);
