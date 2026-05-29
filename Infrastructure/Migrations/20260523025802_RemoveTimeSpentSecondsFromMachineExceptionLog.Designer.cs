@@ -3,6 +3,7 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260523025802_RemoveTimeSpentSecondsFromMachineExceptionLog")]
+    partial class RemoveTimeSpentSecondsFromMachineExceptionLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,9 +255,6 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("MachineId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("MachineSessionId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("timestamp with time zone");
 
@@ -280,6 +280,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasBaseType("MachineEvent");
 
+                    b.Property<int>("MachineSessionId")
+                        .HasColumnType("integer");
+
                     b.HasIndex("MachineSessionId");
 
                     b.HasDiscriminator().HasValue("OperationLog");
@@ -289,10 +292,19 @@ namespace Infrastructure.Migrations
                 {
                     b.HasBaseType("MachineEvent");
 
+                    b.Property<int>("MachineSessionId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasIndex("MachineSessionId");
+
+                    b.ToTable("MachineEvent", t =>
+                        {
+                            t.Property("MachineSessionId")
+                                .HasColumnName("MachineExceptionLog_MachineSessionId");
+                        });
 
                     b.HasDiscriminator().HasValue("MachineExceptionLog");
                 });
@@ -375,7 +387,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Models.MachineSession", "MachineSession")
                         .WithMany("OperationLogs")
-                        .HasForeignKey("MachineSessionId");
+                        .HasForeignKey("MachineSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MachineSession");
                 });
@@ -384,7 +398,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Models.MachineSession", "MachineSession")
                         .WithMany("ExceptionLogs")
-                        .HasForeignKey("MachineSessionId");
+                        .HasForeignKey("MachineSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MachineSession");
                 });

@@ -53,6 +53,15 @@ namespace Application.Services
 
             existingOrder.Status = updateOrderDto.Status;
             existingOrder.Description = updateOrderDto.Description;
+
+            if (existingOrder.Status == OrderStatus.Active)
+            {
+                foreach (var session in existingOrder.MachineSessions)
+                {
+                    session.Status = MachineSessionStatus.InProgress;
+                    await _machineSessionRepository.UpdateAsync(session);
+                }
+            }
             await _orderRepository.UpdateAsync(existingOrder);
         }
     }

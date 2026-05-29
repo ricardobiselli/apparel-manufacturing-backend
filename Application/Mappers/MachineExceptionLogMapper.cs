@@ -22,7 +22,7 @@ namespace Application.Mappers
                 MachineEventId = machineExceptionLog.MachineEventId,
                 MachineSessionId = machineExceptionLog.MachineSessionId,
                 Type = machineExceptionLog.Type,
-                TimeStamp = machineExceptionLog.Timestamp,
+                Timestamp = machineExceptionLog.Timestamp,
             };
         }
     }

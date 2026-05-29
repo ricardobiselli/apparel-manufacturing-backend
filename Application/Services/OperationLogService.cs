@@ -11,18 +11,24 @@ public class OperationLogService : IOperationLogService
 {
     private readonly IOperationLogRepository _operationLogRepository;
     private readonly IMachineSessionRepository _machineSessionRepository;
+    private readonly IOrderRepository _orderRepository;
 
-    public OperationLogService(IOperationLogRepository operationLogRepository, IMachineSessionRepository machineSessionRepository)
+    public OperationLogService(IOperationLogRepository operationLogRepository, IMachineSessionRepository machineSessionRepository, IOrderRepository orderRepository)
     {
         _operationLogRepository = operationLogRepository;
         _machineSessionRepository = machineSessionRepository;
+        _orderRepository = orderRepository;
     }
 
     public async Task<OperationLogDTO> AddOperationLogAsync(AddOperationLogDTO addOperationLogDTO)
     {
-        var lastLog =
-            await _operationLogRepository
-     .GetLastByMachineSessionIdAsync(addOperationLogDTO.MachineSessionId);
+        var currentMachineSession = await _machineSessionRepository.GetByIdAsync(addOperationLogDTO.MachineSessionId);
+        if (currentMachineSession == null)
+            throw new KeyNotFoundException($"Machine session {addOperationLogDTO.MachineSessionId} not found.");
+
+        if (currentMachineSession.Status == MachineSessionStatus.Completed)
+            throw new InvalidOperationException("Cannot add an operation log to a completed machine session.");
+
         var operationLog = OperationLogMapper.ToEntity(addOperationLogDTO);
         var result = await _operationLogRepository.AddOperationLogAsync(operationLog);
         return OperationLogMapper.ToDto(result);
@@ -30,25 +36,34 @@ public class OperationLogService : IOperationLogService
 
     public async Task<MachineExceptionLogDTO> AddMachineExceptionLogAsync(AddMachineExceptionLogDTO addMachineExceptionLogDTO)
     {
-        var exceptionType = addMachineExceptionLogDTO.Type;
-        Console.WriteLine($"DTO TYPE NULL?: {addMachineExceptionLogDTO.Type}");
-        Console.WriteLine($"DTO TYPE INT: {(int)addMachineExceptionLogDTO.Type}");
+        var currentMachineSession = await _machineSessionRepository.GetByIdAsync(addMachineExceptionLogDTO.MachineSessionId);
+        if (currentMachineSession == null)
+            throw new KeyNotFoundException($"Machine session {addMachineExceptionLogDTO.MachineSessionId} not found.");
 
+        if (currentMachineSession.Status == MachineSessionStatus.Completed)
+            throw new InvalidOperationException("Cannot add an exception log to a completed machine session.");
 
         var machineExceptionLog = MachineExceptionLogMapper.ToEntity(addMachineExceptionLogDTO);
-        machineExceptionLog.Type = exceptionType;
 
         if (machineExceptionLog.Type == MachineExceptionType.EndOfProduction)
         {
-            var currentMachineSession = await _machineSessionRepository.GetByIdAsync(addMachineExceptionLogDTO.MachineSessionId);
             currentMachineSession.EndedAt = DateTime.UtcNow;
             currentMachineSession.Status = MachineSessionStatus.Completed;
             await _machineSessionRepository.UpdateAsync(currentMachineSession);
+
+            var currentOrder = await _orderRepository.GetByIdAsync(currentMachineSession.OrderId);
+            if (currentOrder == null)
+                throw new KeyNotFoundException($"Order {currentMachineSession.OrderId} not found.");
+
+            if (currentOrder.MachineSessions.All(ms => ms.Status == MachineSessionStatus.Completed))
+            {
+                currentOrder.Status = OrderStatus.Completed;
+                await _orderRepository.UpdateAsync(currentOrder);
+            }
         }
 
         var response = await _operationLogRepository.AddMachineExceptionLogAsync(machineExceptionLog);
         return MachineExceptionLogMapper.ToDto(response);
-
     }
     public async Task<List<OperationLogDTO>> GetAllOperationLogsAsync()
     {
