@@ -9,14 +9,16 @@
         public int GarmentId { get; set; }
 
         public double BaseTime { get; set; }
+        public int UnitsPerGarment { get; set; }
 
         public Operation() { }
 
-        public Operation(string operationName, string operationDescription, double baseTime, double bundleAllowance, double workerAllowance)
+        public Operation(string operationName, string operationDescription, double baseTime, int unitsPerGarment)
         {
             OperationName = operationName;
             OperationDescription = operationDescription;
             BaseTime = baseTime;
+            UnitsPerGarment = unitsPerGarment;
         }
     }
 }

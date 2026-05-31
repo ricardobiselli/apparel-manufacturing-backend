@@ -5,12 +5,12 @@ using Domain.Models;
 namespace Application.Services;
 
 
-public class MachineSessionTimeCalculator : IMachineSessionTimeCalculator
+public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
 {
 
     private readonly IMachineSessionRepository _machineSessionRepository;
 
-    public MachineSessionTimeCalculator(IMachineSessionRepository machineSessionRepository)
+    public TimeSegmentsCalculator(IMachineSessionRepository machineSessionRepository)
     {
         _machineSessionRepository = machineSessionRepository;
     }
@@ -48,15 +48,7 @@ public class MachineSessionTimeCalculator : IMachineSessionTimeCalculator
 
     private static DateTime GetTimestamp(MachineEvent log)
     {
-        switch (log)
-        {
-            case OperationLog op:
-                return op.Timestamp;
-            case MachineExceptionLog ex:
-                return ex.Timestamp;
-            default:
-                throw new InvalidOperationException("Unknown log type");
-        }
+        return log.Timestamp;
 
     }
 

@@ -47,7 +47,8 @@ namespace Application.Services
                 {
                     OperationName = o.OperationName,
                     OperationDescription = o.OperationDescription,
-                    BaseTime = o.BaseTime
+                    BaseTime = o.BaseTime,
+                    UnitsPerGarment = o.UnitsPerGarment
                 }).ToList() ?? new List<Operation>()
             };
 
