@@ -10,7 +10,7 @@ namespace Application.Models.Requests
         public string GarmentDescription { get; set; }
 
         // move later?
-        public List<OperationDTO>? Operations { get; set; }
+        public List<AddOperationDTO>? Operations { get; set; }
 
 
 

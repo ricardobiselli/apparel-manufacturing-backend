@@ -12,7 +12,8 @@ namespace Application.Mappers
                 OperationId = operation.OperationId,
                 OperationName = operation.OperationName,
                 OperationDescription = operation.OperationDescription,
-                BaseTime = operation.BaseTime
+                BaseTime = operation.BaseTime,
+                UnitsPerGarment = operation.UnitsPerGarment,
             };
         }
     }
