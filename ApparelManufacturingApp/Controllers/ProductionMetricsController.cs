@@ -9,6 +9,11 @@ namespace ApparelManufacturingApp.Controllers
     {
         private readonly IProductionMetricsService _productionMetricsService;
 
+        public ProductionMetricsController(IProductionMetricsService productionMetricsService)
+        {
+            _productionMetricsService = productionMetricsService;
+        }
+
         [HttpGet]
         public async Task<ProductionMetricsDTO> Get(int sessionId)
         {
