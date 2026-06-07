@@ -52,15 +52,27 @@ public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
 
     }
 
-    private static SegmentType ResolveSegmentType(object previous)
+    private static SegmentType ResolveSegmentType(MachineEvent current)
     {
-        switch (previous)
+        switch (current)
         {
             case OperationLog op:
                 return SegmentType.Productive;
             case MachineExceptionLog ex:
-                return SegmentType.Downtime;
-            default: return SegmentType.Unknown;
+                switch (ex.Type)
+                {
+                    case MachineExceptionType.FaultyPiece:
+                        return SegmentType.QualityIssue;
+                    case MachineExceptionType.ThreadBreak:
+                    case MachineExceptionType.NeedleBreak:
+                        return SegmentType.MachineIssue;
+                    case MachineExceptionType.Break:
+                        return SegmentType.Break;
+                    default:
+                        return SegmentType.Unknown;
+                }
+            default:
+                return SegmentType.Unknown;
         }
     }
 }

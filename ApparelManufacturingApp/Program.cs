@@ -85,7 +85,7 @@ builder.Services.AddScoped<IOperationLogRepository, OperationLogRepository>();
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
-
+builder.Services.AddScoped<IProductionMetricsService, ProductionMetricsService>();
 builder.Services.AddScoped<IMachineSessionTimeCalculator, TimeSegmentsCalculator>();
 builder.Services.AddScoped<IGarmentService, GarmentService>();
 builder.Services.AddScoped<IMachineService, MachineService>();
