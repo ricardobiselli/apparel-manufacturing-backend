@@ -1,6 +1,9 @@
 ﻿public enum SegmentType
 {
     Productive,
-    Downtime,
+    MachineIssue,
+    QualityIssue,
+    Break,
+    NonWorkingTime,
     Unknown
 }
