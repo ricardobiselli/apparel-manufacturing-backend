@@ -1,6 +1,6 @@
 ﻿namespace Application.Models.Requests;
 
-public class TimeSegment
+public class TimeSegmentDTO
 {
     public DateTime Start { get; init; }
     public DateTime End { get; init; }

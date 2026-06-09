@@ -14,17 +14,15 @@ public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
     {
         _machineSessionRepository = machineSessionRepository;
     }
-    public async Task<List<TimeSegment>> Calculate(int sessionId)
+    public async Task<List<TimeSegmentDTO>> Calculate(int sessionId)
     {
         var session = await _machineSessionRepository.GetByIdAsyncIncludingLogs(sessionId);
 
-        var events = session.OperationLogs
-            .Cast<MachineEvent>()
-            .Concat(session.ExceptionLogs)
+        var events = session.Events
             .OrderBy(ev => ev.Timestamp)
             .ToList();
 
-        var segments = new List<TimeSegment>();
+        var segments = new List<TimeSegmentDTO>();
 
         if (events.Count < 2)
             return segments;
@@ -34,22 +32,25 @@ public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
             var current = events[i];
             var next = events[i + 1];
 
-            segments.Add(new TimeSegment
+            segments.Add(new TimeSegmentDTO
             {
-                Start = GetTimestamp(current),
-                End = GetTimestamp(next),
+                Start = current.Timestamp,
+                End = next.Timestamp,
                 Type = ResolveSegmentType(current)
             });
         }
+
+        var lastEvent = events.Last();
+
+        segments.Add(new TimeSegmentDTO
+        {
+            Start = lastEvent.Timestamp,
+            End = lastEvent.Timestamp,
+            Type = ResolveSegmentType(lastEvent)
+        });
         Console.WriteLine("segments: ", segments);
+
         return segments;
-    }
-
-
-    private static DateTime GetTimestamp(MachineEvent log)
-    {
-        return log.Timestamp;
-
     }
 
     private static SegmentType ResolveSegmentType(MachineEvent current)
@@ -68,6 +69,10 @@ public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
                         return SegmentType.MachineIssue;
                     case MachineExceptionType.Break:
                         return SegmentType.Break;
+                    case MachineExceptionType.EndOfDay:
+                        return SegmentType.EndOfDay;
+                    case MachineExceptionType.EndOfProduction:
+                        return SegmentType.EndOfProduction;
                     default:
                         return SegmentType.Unknown;
                 }
