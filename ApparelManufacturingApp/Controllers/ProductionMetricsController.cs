@@ -14,7 +14,7 @@ namespace ApparelManufacturingApp.Controllers
             _productionMetricsService = productionMetricsService;
         }
 
-        [HttpGet]
+        [HttpGet("{sessionId}")]
         public async Task<ProductionMetricsDTO> Get(int sessionId)
         {
             var metrics = await _productionMetricsService.CalculateMetrics(sessionId);

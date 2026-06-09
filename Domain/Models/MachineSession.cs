@@ -21,13 +21,15 @@
 
         public MachineSessionStatus Status { get; set; }
 
-        public ICollection<OperationLog> OperationLogs { get; set; }
-        public ICollection<MachineExceptionLog> ExceptionLogs { get; set; }
+        //public ICollection<OperationLog> OperationLogs { get; set; }
+        //public ICollection<MachineExceptionLog> ExceptionLogs { get; set; }
+
+        public ICollection<MachineEvent> Events { get; set; }
 
         public MachineSession()
         {
-            OperationLogs = new List<OperationLog>();
-            ExceptionLogs = new List<MachineExceptionLog>();
+            Events = new List<MachineEvent>();
+            //ExceptionLogs = new List<MachineExceptionLog>();
         }
         public MachineSession(int orderId, int machineId, int garmentId, int operationId, MachineSessionStatus status)
         {

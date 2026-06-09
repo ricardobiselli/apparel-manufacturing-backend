@@ -36,7 +36,7 @@ public class OperationLogController : ControllerBase
     }
 
     [HttpGet("GetTimeSegmentsForMachineSession/{machineSessionId}")]
-    public async Task<ActionResult<ICollection<TimeSegment>>>
+    public async Task<ActionResult<ICollection<TimeSegmentDTO>>>
     GetTimeSegmentsForMachineSession(int machineSessionId)
     {
         var timeSegments = await _machineSessionTimeCalculator.Calculate(machineSessionId);

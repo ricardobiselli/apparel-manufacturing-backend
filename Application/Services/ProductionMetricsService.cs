@@ -21,7 +21,7 @@ public class ProductionMetricsService : IProductionMetricsService
         _machineSessionRepository = machineSessionRepository;
     }
 
-      public async Task<ProductionMetricsDTO> CalculateMetrics(int sessionId)
+    public async Task<ProductionMetricsDTO> CalculateMetrics(int sessionId)
     {
         var currentSession = await _machineSessionRepository.GetByIdWithDetails(sessionId);
 
@@ -45,7 +45,13 @@ public class ProductionMetricsService : IProductionMetricsService
             currentSession.Operation.UnitsPerGarment * quantity;
 
         var producedUnits =
-            currentSession.OperationLogs.Count();
+            currentSession.Events
+            .Where(e => e is OperationLog).Count();
+        
+        //if (currentSession.EndedAt != null)
+        //{
+        //    producedUnits += 1;
+        //}
 
         var completionPercentage =
             expectedUnits == 0
@@ -78,10 +84,12 @@ public class ProductionMetricsService : IProductionMetricsService
             ProducedUnits = producedUnits,
             CompletionPercentage = completionPercentage,
             AverageSecondsPerUnit = averageSecondsPerUnit,
-            EfficiencyPercentage = efficiencyPercentage
+            EfficiencyPercentage = efficiencyPercentage,
+            SessionEndTime = currentSession.EndedAt,
+            Segments = segments
         };
     }
-    private static TimeSpan CalculateProductiveTime(List<TimeSegment> segments)
+    private static TimeSpan CalculateProductiveTime(List<TimeSegmentDTO> segments)
     {
         return TimeSpan.FromSeconds(
             segments
@@ -90,7 +98,7 @@ public class ProductionMetricsService : IProductionMetricsService
         );
     }
 
-    private static TimeSpan CalculateDowntimeTime(List<TimeSegment> segments)
+    private static TimeSpan CalculateDowntimeTime(List<TimeSegmentDTO> segments)
     {
         return TimeSpan.FromSeconds(
             segments
@@ -102,7 +110,7 @@ public class ProductionMetricsService : IProductionMetricsService
         );
     }
 
-    private static TimeSpan CalculateMachineIssueTime(List<TimeSegment> segments)
+    private static TimeSpan CalculateMachineIssueTime(List<TimeSegmentDTO> segments)
     {
         return TimeSpan.FromSeconds(
             segments
@@ -111,7 +119,7 @@ public class ProductionMetricsService : IProductionMetricsService
         );
     }
 
-    private static TimeSpan CalculateQualityIssueTime(List<TimeSegment> segments)
+    private static TimeSpan CalculateQualityIssueTime(List<TimeSegmentDTO> segments)
     {
         return TimeSpan.FromSeconds(
             segments
@@ -120,7 +128,7 @@ public class ProductionMetricsService : IProductionMetricsService
         );
     }
 
-    private static TimeSpan CalculateBreakTime(List<TimeSegment> segments)
+    private static TimeSpan CalculateBreakTime(List<TimeSegmentDTO> segments)
     {
         return TimeSpan.FromSeconds(
             segments

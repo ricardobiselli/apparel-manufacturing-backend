@@ -5,5 +5,7 @@
     QualityIssue,
     Break,
     NonWorkingTime,
+    EndOfDay,
+    EndOfProduction,
     Unknown
 }
