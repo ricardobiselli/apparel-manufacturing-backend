@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Services;
 using Domain.IRepositories;
 using Infrastructure;
+using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
@@ -74,17 +75,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-builder.Services.AddScoped<ICustomAuthenticationService, CustomAuthenticationService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
 builder.Services.AddScoped<IGarmentRepository, GarmentRepository>();
 builder.Services.AddScoped<IMachineRepository, MachineRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IMachineSessionRepository, MachineSessionRepository>();
 builder.Services.AddScoped<IOperationLogRepository, OperationLogRepository>();
-
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IProductionMetricsService, ProductionMetricsService>();
 builder.Services.AddScoped<IMachineSessionTimeCalculator, TimeSegmentsCalculator>();
 builder.Services.AddScoped<IGarmentService, GarmentService>();
@@ -92,10 +92,6 @@ builder.Services.AddScoped<IMachineService, MachineService>();
 builder.Services.AddScoped<IMachineSessionService, MachineSessionService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOperationLogService, OperationLogService>();
-
-builder.Services.Configure<CustomAuthenticationService.AuthenticationServiceOptions>(
-    builder.Configuration.GetSection(CustomAuthenticationService.AuthenticationServiceOptions.AuthenticationService));
-
 
 //// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -130,6 +126,21 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context =
+        scope.ServiceProvider
+            .GetRequiredService<ApplicationDbContext>();
+
+    var passwordService =
+        scope.ServiceProvider
+            .GetRequiredService<IPasswordService>();
+
+    DbSeeder.Seed(
+        context,
+        passwordService);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -24,12 +24,12 @@ public class MachineSessionService : IMachineSessionService
 
         await _machineSessionRepository.AddAsync(machineSessionEntity);
 
-        var order = await _orderRepository.GetByIdAsync(machineSessionEntity.OrderId);  
-        if (order.Status == OrderStatus.Active)
-        {
-            machineSessionEntity.Status = MachineSessionStatus.InProgress;
-            await _machineSessionRepository.UpdateAsync(machineSessionEntity);
-        }
+        //var order = await _orderRepository.GetByIdAsync(machineSessionEntity.OrderId);
+        //if (order.Status == OrderStatus.Active)
+        //{
+        //    machineSessionEntity.Status = MachineSessionStatus.InProgress;
+        //    await _machineSessionRepository.UpdateAsync(machineSessionEntity);
+        //}
 
         var fullEntity =
             await _machineSessionRepository
