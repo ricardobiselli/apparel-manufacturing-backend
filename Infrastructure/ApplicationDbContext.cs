@@ -1,5 +1,5 @@
-﻿using Domain.Models;
-using Domain.Models.Users;
+﻿using Domain.Enums;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
@@ -22,14 +22,10 @@ namespace Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasDiscriminator<string>("UserType")
-                .HasValue<Worker>("GarmentWorker");
-
             modelBuilder.Entity<Operation>()
-                .HasOne(x => x.Garment)
-                .WithMany(x => x.Operations)
-                .HasForeignKey(x => x.GarmentId);
+                 .HasOne(x => x.Garment)
+                 .WithMany(x => x.Operations)
+                 .HasForeignKey(x => x.GarmentId);
 
             modelBuilder.Entity<OrderGarment>()
                 .HasKey(og => new { og.OrderId, og.GarmentId });

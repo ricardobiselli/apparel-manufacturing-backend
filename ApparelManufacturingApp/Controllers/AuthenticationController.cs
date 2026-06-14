@@ -2,33 +2,36 @@
 using Application.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Presentation.Controllers
+namespace Presentation.Controllers;
+
+[Route("api/authentication")]
+[ApiController]
+public class AuthenticationController : ControllerBase
 {
-    [Route("api/authentication")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
+    private readonly IAuthenticationService _authenticationService;
+
+    public AuthenticationController(
+        IAuthenticationService authenticationService)
     {
-        private readonly IConfiguration _config;
-        private readonly ICustomAuthenticationService _customAuthenticationService;
+        _authenticationService = authenticationService;
+    }
 
-        public AuthenticationController(IConfiguration config, ICustomAuthenticationService customAuthenticationService)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(
+        UserLoginRequestDTO request)
+    {
+        var result =
+            await _authenticationService.Login(request);
+
+        if (result == null)
         {
-            _config = config;
-            _customAuthenticationService = customAuthenticationService;
+            return Unauthorized(
+                new
+                {
+                    Message = "Invalid credentials"
+                });
         }
 
-        [HttpPost("authenticate")]
-        public async Task<ActionResult<string>> AuthenticateAsync(UserLoginRequest authenticationRequest)
-        {
-            var token = await _customAuthenticationService.AuthenticateAsync(authenticationRequest);
-
-            if (token == null)
-            {
-                return Unauthorized(new { message = "Usuario o contraseña incorrecta" });
-            }
-
-            return Ok(token);
-        }
-
+        return Ok(result);
     }
 }

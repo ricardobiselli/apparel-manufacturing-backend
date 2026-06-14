@@ -1,5 +1,5 @@
 ﻿using Domain.IRepositories;
-using Domain.Models.Users;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories
@@ -13,22 +13,30 @@ namespace Infrastructure.Data.Repositories
             _context = context;
         }
 
-        public bool ExistsByUserName(string userName)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            return _context.Users.Any(user => user.UserName == userName);
+            return await _context.Set<User>()
+                .FirstOrDefaultAsync(u => u.UserId == id);
         }
 
-        public bool ExistsByEmail(string email)
+        public async Task<User?> GetByEmployeeNumberAsync(string employeeIdNumber)
         {
-            return _context.Users.Any(user => user.Email == email);
+            return await _context.Set<User>()
+                .FirstOrDefaultAsync(u => u.EmployeeIdNumber == employeeIdNumber);
         }
 
-        public Task<User?> GetUserByEmailOrUsername(string emailOrUsername)
+        public async Task<User> AddAsync(User user)
         {
-            return _context.Users.FirstOrDefaultAsync(u =>
-                u.Email == emailOrUsername ||
-                u.UserName == emailOrUsername);
+            await _context.Set<User>().AddAsync(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
+        public async Task<User> UpdateAsync(User user)
+        {
+            _context.Set<User>().Update(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
     }
 }

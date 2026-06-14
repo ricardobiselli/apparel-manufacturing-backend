@@ -1,13 +1,12 @@
-﻿using Domain.Models.Users;
+﻿using Domain.Models;
 
 namespace Domain.IRepositories
 {
-    public interface IUserRepository 
+    public interface IUserRepository
     {
-        Task<User> GetUserByEmailOrUsername(string emailOrUsername);
-        public bool ExistsByUserName(string userName);
-        public bool ExistsByEmail(string email);
-
-
+        Task<User?> GetByEmployeeNumberAsync(string employeeNumber);
+        Task<User?> GetByIdAsync(int id);
+        Task<User> AddAsync(User user);
+        Task<User> UpdateAsync(User user);
     }
 }

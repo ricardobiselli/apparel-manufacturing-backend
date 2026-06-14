@@ -1,11 +1,9 @@
 ﻿using Application.Models;
 using Application.Models.Requests;
 using Domain.Models;
-using Domain.Models.Users;
 
 namespace Application.Mappers
 {
-
 
     public static class MachineMapper
     {

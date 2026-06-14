@@ -22,12 +22,17 @@ public class OperationLogService : IOperationLogService
 
     public async Task<OperationLogDTO> AddOperationLogAsync(AddOperationLogDTO addOperationLogDTO)
     {
-        var currentMachineSession = await _machineSessionRepository.GetByIdAsync(addOperationLogDTO.MachineSessionId);
+        var currentMachineSession = await _machineSessionRepository.GetByIdAsyncIncludingLogs(addOperationLogDTO.MachineSessionId);
         if (currentMachineSession == null)
             throw new KeyNotFoundException($"Machine session {addOperationLogDTO.MachineSessionId} not found.");
 
         if (currentMachineSession.Status == MachineSessionStatus.Completed)
             throw new InvalidOperationException("Cannot add an operation log to a completed machine session.");
+
+        if (currentMachineSession.Events.Count == 0)
+        {
+            currentMachineSession.Status = MachineSessionStatus.InProgress;
+        }
 
         var operationLog = OperationLogMapper.ToEntity(addOperationLogDTO);
         var result = await _operationLogRepository.AddOperationLogAsync(operationLog);
@@ -42,6 +47,11 @@ public class OperationLogService : IOperationLogService
 
         if (currentMachineSession.Status == MachineSessionStatus.Completed)
             throw new InvalidOperationException("Cannot add an exception log to a completed machine session.");
+        
+        if (currentMachineSession.Events.Count == 0)
+        {
+            currentMachineSession.Status = MachineSessionStatus.InProgress;
+        }
 
         var machineExceptionLog = MachineExceptionLogMapper.ToEntity(addMachineExceptionLogDTO);
 
