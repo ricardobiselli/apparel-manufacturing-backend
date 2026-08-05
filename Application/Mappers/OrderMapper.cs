@@ -47,7 +47,7 @@ namespace Application.Mappers
                         GarmentId = ms.GarmentId,
                         GarmentName = ms.Garment.GarmentName,
                         OperationId = ms.OperationId,
-                        OperationName = ms.Operation.OperationName,
+                        OperationName = ms.OperationName,
                         StartedAt = ms.StartedAt,
                         EndedAt = ms.EndedAt,
                         Status = ms.Status

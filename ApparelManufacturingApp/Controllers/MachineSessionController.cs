@@ -33,9 +33,9 @@ public class MachineSessionController : ControllerBase
     }
 
     [HttpGet("GetPending/{machineId}")]
-    public async Task<ActionResult<ICollection<MachineSessionDTO>>> GetPendingSessionsForActiveOrdersByMachineId([FromRoute] int machineId)
+    public async Task<ActionResult<ICollection<MachineSessionDTO>>> GetAllSessionsExceptPendingOrInProgressByMachineId([FromRoute] int machineId)
     {
-        var machineSessions = await _machineSessionService.GetPendingSessionsForActiveOrdersByMachineId(machineId);
+        var machineSessions = await _machineSessionService.GetAllSessionsExceptPendingOrInProgressByMachineId(machineId);
         return Ok(machineSessions);
     }
 

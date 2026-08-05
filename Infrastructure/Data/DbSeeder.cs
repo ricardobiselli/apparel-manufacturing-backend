@@ -23,7 +23,7 @@ public static class DbSeeder
                     passwordService.HashPassword("admin123"),
                 Role = UserRole.Admin,
                 MustChangePassword = false,
-                State = EntitiesState.Active
+                State = EntityState.Active
             },
 
             new User
@@ -35,7 +35,7 @@ public static class DbSeeder
                     passwordService.HashPassword("operator123"),
                 Role = UserRole.Operator,
                 MustChangePassword = false,
-                State = EntitiesState.Active
+                State = EntityState.Active
             },
 
             new User
@@ -47,7 +47,7 @@ public static class DbSeeder
                     passwordService.HashPassword("operator123"),
                 Role = UserRole.Operator,
                 MustChangePassword = false,
-                State = EntitiesState.Active
+                State = EntityState.Active
             },
 
             new User
@@ -59,7 +59,7 @@ public static class DbSeeder
                     passwordService.HashPassword("operator123"),
                 Role = UserRole.Operator,
                 MustChangePassword = false,
-                State = EntitiesState.Active
+                State = EntityState.Active
             }
         );
 

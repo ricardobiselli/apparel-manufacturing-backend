@@ -5,5 +5,6 @@
     NeedleBreak,
     Break,
     EndOfDay,
-    EndOfProduction 
+    EndOfProduction, //end of session
+    WaitingForBundleOrSupplies
 }

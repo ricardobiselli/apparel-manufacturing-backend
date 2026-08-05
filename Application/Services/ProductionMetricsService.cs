@@ -42,21 +42,14 @@ public class ProductionMetricsService : IProductionMetricsService
         var breakTime = CalculateBreakTime(segments);
 
         var expectedUnits =
-            currentSession.Operation.UnitsPerGarment * quantity;
+            currentSession.UnitsPerGarment * quantity;
 
         var producedUnits =
             currentSession.Events
             .Where(e => e is OperationLog).Count();
-        
-        //if (currentSession.EndedAt != null)
-        //{
-        //    producedUnits += 1;
-        //}
 
-        var completionPercentage =
-            expectedUnits == 0
-                ? 0
-                : (double)producedUnits / expectedUnits * 100;
+        double completionPercentage = expectedUnits == 0 ? 0 //defensive
+            : Math.Min((double)producedUnits / expectedUnits * 100, 100);
 
         var averageSecondsPerUnit =
             producedUnits == 0
@@ -66,15 +59,15 @@ public class ProductionMetricsService : IProductionMetricsService
         var efficiencyPercentage =
             productiveTime.TotalSeconds == 0
                 ? 0
-                : (producedUnits * currentSession.Operation.BaseTime)
+                : (producedUnits * currentSession.BaseTime)
                     / productiveTime.TotalSeconds * 100;
 
         return new ProductionMetricsDTO
         {
-            OperationId = currentSession.Operation.OperationId,
-            OperationName = currentSession.Operation.OperationName,
-            BaseTime = currentSession.Operation.BaseTime,
-            UnitsPerGarment = currentSession.Operation.UnitsPerGarment,
+            OperationId = currentSession.OperationId,
+            OperationName = currentSession.OperationName,
+            BaseTime = currentSession.BaseTime,
+            UnitsPerGarment = currentSession.UnitsPerGarment,
             ProductiveTime = productiveTime,
             DowntimeTime = downtimeTime,
             MachineIssueTime = machineIssueTime,

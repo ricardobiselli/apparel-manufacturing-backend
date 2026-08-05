@@ -45,15 +45,22 @@ namespace ApparelManufacturingApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MachineDTO>> GetById([FromRoute] int id)
         {
-            
+
             var machineDto = await _machineService.GetByIdAsync(id);
             return Ok(machineDto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateMachineDTO updateMachineDTO)
+        {
+            await _machineService.UpdateAsync(id, updateMachineDTO);
+            return NoContent();
         }
 
         [HttpDelete]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
-      
+
             var machine = await _machineService.GetByIdAsync(id);
             await _machineService.DeleteAsync(id);
             return NoContent();

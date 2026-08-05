@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
                 .Include(o => o.MachineSessions)
                     .ThenInclude(ms => ms.Garment)
                 .Include(o => o.MachineSessions)
-                    .ThenInclude(ms => ms.Operation)
+                    //.ThenInclude(ms => ms.Operation)
                 .ToListAsync();
         }
 
@@ -37,7 +37,7 @@ namespace Infrastructure.Repositories
                 .Include(o => o.MachineSessions)
                     .ThenInclude(ms => ms.Garment)
                 .Include(o => o.MachineSessions)
-                    .ThenInclude(ms => ms.Operation)
+                    //.ThenInclude(ms => ms.Operation)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
         }
 

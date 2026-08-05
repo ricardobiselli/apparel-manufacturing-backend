@@ -16,5 +16,15 @@ namespace Application.Mappers
                 UnitsPerGarment = operation.UnitsPerGarment,
             };
         }
+
+        public static Operation ToEntity(AddOperationDTO dto)
+        {
+            return new Operation(
+                dto.OperationName,
+                dto.OperationDescription,
+                dto.BaseTime,
+                dto.UnitsPerGarment
+            );
+        }
     }
 }

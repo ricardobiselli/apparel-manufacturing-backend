@@ -22,17 +22,17 @@ namespace Infrastructure.Repositories
         {
             return await _context.Set<MachineSession>()
                 .Include(ms => ms.Garment)
-                .Include(ms => ms.Operation)
+                //.Include(ms => ms.Operation)
                 .Where(ms => ms.MachineId == machineId && ms.Status == MachineSessionStatus.InProgress)
                 .SingleOrDefaultAsync();
         }
 
-     
+
         public async Task<List<MachineSession>> GetPendingSessionsForActiveOrdersByMachineId(int machineId)
         {
             return await _context.Set<MachineSession>()
                 .Include(ms => ms.Garment)
-                .Include(ms => ms.Operation)
+                //.Include(ms => ms.Operation)
                 .Where(ms =>
                     ms.MachineId == machineId &&
                     ms.Order.Status == OrderStatus.Active &&
@@ -40,12 +40,26 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<ICollection<MachineSession>> GetAllSessionsExceptPendingOrInProgressByMachineId(int machineId)
+        {
+            return await _context.Set<MachineSession>()
+                            .Include(ms => ms.Garment)
+                            //.Include(ms => ms.Operation)
+                            .Where(ms =>
+                                ms.MachineId == machineId &&
+                                ms.Order.Status == OrderStatus.Active &&
+                                ms.Status != MachineSessionStatus.Paused &&
+                                ms.Status != MachineSessionStatus.Completed &&
+                                ms.Status != MachineSessionStatus.Cancelled)
+                            .ToListAsync();
+        }
+
 
         public async Task<List<MachineSession>> GetAllAsync()
         {
             return await _context.Set<MachineSession>()
             .Include(ms => ms.Garment)
-            .Include(ms => ms.Operation)
+            //.Include(ms => ms.Operation)
             .ToListAsync();
         }
 
@@ -65,7 +79,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.Set<MachineSession>()
                 .Include(ms => ms.Garment)
-                .Include(ms => ms.Operation)
+                //.Include(ms => ms.Operation)
                 .FirstOrDefaultAsync(ms => ms.MachineSessionId == id);
         }
 

@@ -38,7 +38,7 @@ public class AuthenticationService : IAuthenticationService
         if (user == null)
             return null;
 
-        if (user.State != EntitiesState.Active)
+        if (user.State != EntityState.Active)
             return null;
 
         bool validPassword =

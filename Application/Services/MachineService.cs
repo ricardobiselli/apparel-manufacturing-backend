@@ -44,9 +44,18 @@ namespace Application.Services
         {
             await _machineRepository.DeleteAsync(id);
         }
-        public async Task UpdateAsync(UpdateMachineDTO updateMachineDTO)
+        public async Task UpdateAsync(int id, UpdateMachineDTO updateMachineDTO)
         {
-            throw new NotImplementedException();
+            var machine = await _machineRepository.GetByIdAsync(id);
+
+            if (machine == null)
+            { 
+                throw new Exception($"Machine with id {id} not found."); 
+            }
+
+            MachineMapper.UpdateEntity(machine, updateMachineDTO);
+            await _machineRepository.UpdateAsync(machine); ;
+
         }
     }
 

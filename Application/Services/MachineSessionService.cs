@@ -3,6 +3,7 @@ using Application.Mappers;
 using Application.Models;
 using Application.Models.Requests;
 using Domain.IRepositories;
+using Domain.Models;
 
 namespace Application.Services;
 
@@ -11,29 +12,44 @@ public class MachineSessionService : IMachineSessionService
 
     private readonly IMachineSessionRepository _machineSessionRepository;
     private readonly IOrderRepository _orderRepository;
-
-    public MachineSessionService(IMachineSessionRepository machineSessionRepository, IOrderRepository orderRepository)
+    private readonly IOperationRepository _operationRepository;
+    public MachineSessionService(
+        IMachineSessionRepository machineSessionRepository,
+        IOrderRepository orderRepository,
+        IOperationRepository operationRepository)
     {
         _machineSessionRepository = machineSessionRepository;
         _orderRepository = orderRepository;
+        _operationRepository = operationRepository;
     }
-
     public async Task<MachineSessionDTO> AddAsync(AddMachineSessionDTO dto)
     {
-        var machineSessionEntity = MachineSessionMapper.ToEntity(dto);
+        var operation = await _operationRepository.GetByIdAsync(dto.OperationId);
 
-        await _machineSessionRepository.AddAsync(machineSessionEntity);
+        if (operation == null)
+        {
+            throw new Exception($"Operation with id {dto.OperationId} not found.");
+        }
 
-        //var order = await _orderRepository.GetByIdAsync(machineSessionEntity.OrderId);
-        //if (order.Status == OrderStatus.Active)
-        //{
-        //    machineSessionEntity.Status = MachineSessionStatus.InProgress;
-        //    await _machineSessionRepository.UpdateAsync(machineSessionEntity);
-        //}
+        var machineSession = new MachineSession
+        {
+            OrderId = dto.OrderId,
+            MachineId = dto.MachineId,
+            GarmentId = dto.GarmentId,
+            OperationId = operation.OperationId,
+            Status = dto.Status,
+
+            // Snapshot
+            OperationName = operation.OperationName,
+            OperationDescription = operation.OperationDescription,
+            BaseTime = operation.BaseTime,
+            UnitsPerGarment = operation.UnitsPerGarment
+        };
+
+        await _machineSessionRepository.AddAsync(machineSession);
 
         var fullEntity =
-            await _machineSessionRepository
-                .GetByIdWithDetails(machineSessionEntity.MachineSessionId);
+            await _machineSessionRepository.GetByIdWithDetails(machineSession.MachineSessionId);
 
         return MachineSessionMapper.ToDto(fullEntity);
     }
@@ -85,9 +101,9 @@ public class MachineSessionService : IMachineSessionService
         throw new NotImplementedException();
     }
 
-    public async Task<ICollection<MachineSessionDTO>> GetPendingSessionsForActiveOrdersByMachineId(int machineId)
+    public async Task<ICollection<MachineSessionDTO>> GetAllSessionsExceptPendingOrInProgressByMachineId(int machineId)
     {
-        var machineSessions = await _machineSessionRepository.GetPendingSessionsForActiveOrdersByMachineId(machineId);
+        var machineSessions = await _machineSessionRepository.GetAllSessionsExceptPendingOrInProgressByMachineId(machineId);
         var machineSessionDtos = machineSessions.Select(MachineSessionMapper.ToDto).ToList();
         return machineSessionDtos;
     }

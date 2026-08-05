@@ -3,5 +3,6 @@
     Pending,
     InProgress,
     Completed,
-    Paused
+    Paused,
+    Cancelled
 }

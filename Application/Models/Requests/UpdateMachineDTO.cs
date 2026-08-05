@@ -1,14 +1,11 @@
-﻿namespace Application.Models.Requests
+﻿using Domain.Enums;
+namespace Application.Models.Requests;
+
+public class UpdateMachineDTO
 {
-    public class UpdateMachineDTO
-    {
-
-        public string PostNumber { get; set; }
-        public string MachineName { get; set; }
-        public string MachineModel { get; set; }
-        public DateTime PurchaseDate { get; set; }
-        public DateTime InstallDate { get; set; }
-
-
-    }
+    public int PostNumber { get; set; }
+    public string MachineName { get; set; }
+    public string MachineModel { get; set; }
+    public DateOnly InstallDate { get; set; }
+    public MachineStatus Status { get; set; }
 }

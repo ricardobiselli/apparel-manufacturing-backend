@@ -3,6 +3,7 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260620031915_NewEnumAttributeMachineStatusForMachine")]
+    partial class NewEnumAttributeMachineStatusForMachine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +40,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("GarmentName")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("State")
-                        .HasColumnType("integer");
 
                     b.HasKey("GarmentId");
 
@@ -84,12 +84,6 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MachineSessionId"));
 
-                    b.Property<double>("BaseTime")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateTime?>("EndedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -99,27 +93,16 @@ namespace Infrastructure.Migrations
                     b.Property<int>("MachineId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("OperationDescription")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("OperationId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("OperationName")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("StartedAt")
+                    b.Property<DateTime>("StartedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UnitsPerGarment")
                         .HasColumnType("integer");
 
                     b.HasKey("MachineSessionId");
@@ -127,6 +110,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("GarmentId");
 
                     b.HasIndex("MachineId");
+
+                    b.HasIndex("OperationId");
 
                     b.HasIndex("OrderId");
 
@@ -154,9 +139,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("OperationName")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("State")
-                        .HasColumnType("integer");
 
                     b.Property<int>("UnitsPerGarment")
                         .HasColumnType("integer");
@@ -322,6 +304,12 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Models.Operation", "Operation")
+                        .WithMany()
+                        .HasForeignKey("OperationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Models.Order", "Order")
                         .WithMany("MachineSessions")
                         .HasForeignKey("OrderId")
@@ -331,6 +319,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Garment");
 
                     b.Navigation("Machine");
+
+                    b.Navigation("Operation");
 
                     b.Navigation("Order");
                 });

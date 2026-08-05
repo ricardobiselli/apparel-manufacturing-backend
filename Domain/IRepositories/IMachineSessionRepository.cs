@@ -13,9 +13,8 @@ namespace Domain.IRepositories
         Task<MachineSession?> GetActiveMachineSessionWithDetailsByMachineId(int machineId);
         Task<MachineSession?> GetByIdAsyncIncludingLogs(int id);
         Task<MachineSession?> GetByIdWithDetails(int id);
-
         Task<List<MachineSession>> GetPendingSessionsForActiveOrdersByMachineId(int machineId);
-
+        Task<ICollection<MachineSession>> GetAllSessionsExceptPendingOrInProgressByMachineId(int machineId);
 
     }
 }

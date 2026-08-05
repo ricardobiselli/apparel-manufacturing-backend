@@ -1,4 +1,6 @@
-﻿namespace Domain.Models
+﻿using Domain.Enums;
+
+namespace Domain.Models
 {
     public class Operation
     {
@@ -7,9 +9,10 @@
         public string OperationDescription { get; set; }
         public Garment Garment { get; set; }
         public int GarmentId { get; set; }
-
         public double BaseTime { get; set; }
         public int UnitsPerGarment { get; set; }
+
+        public EntityState State { get; set; }
 
         public Operation() { }
 
