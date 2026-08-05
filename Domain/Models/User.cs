@@ -12,7 +12,7 @@ public class User
     public string PasswordHash { get; set; }
     public UserRole Role { get; set; }
     public bool MustChangePassword { get; set; }
-    public EntitiesState State { get; set; } = EntitiesState.Active;
+    public EntityState State { get; set; } = EntityState.Active;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastLoginAt { get; set; }
 

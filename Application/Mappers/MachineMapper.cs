@@ -13,8 +13,17 @@ namespace Application.Mappers
                   machineDTO.PostNumber,
                   machineDTO.MachineName,
                   machineDTO.MachineModel,
-                  machineDTO.PurchaseDate,
-                  machineDTO.InstallDate);
+                  machineDTO.InstallDate
+                  );
+        }
+
+        public static void UpdateEntity(Machine machine, UpdateMachineDTO machineDTO)
+        {
+            machine.PostNumber = machineDTO.PostNumber;
+            machine.MachineName = machineDTO.MachineName;
+            machine.MachineModel = machineDTO.MachineModel;
+            machine.InstallDate = machineDTO.InstallDate;
+            machine.Status = machineDTO.Status;
         }
 
         public static MachineDTO ToDto(Machine machine)
@@ -25,8 +34,8 @@ namespace Application.Mappers
                 PostNumber = machine.PostNumber,
                 MachineName = machine.MachineName,
                 MachineModel = machine.MachineModel,
-                PurchaseDate = machine.PurchaseDate,
                 InstallDate = machine.InstallDate,
+                Status = machine.Status,
             };
         }
 

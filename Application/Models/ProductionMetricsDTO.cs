@@ -16,6 +16,8 @@ public class ProductionMetricsDTO
     public double CompletionPercentage { get; set; }
     public double AverageSecondsPerUnit { get; set; }
     public double EfficiencyPercentage { get; set; }
+    public DateTime? SessionCreateTime { get; set; }
+    public DateTime? SessionStartTime { get; set; }
     public DateTime? SessionEndTime { get; set; }
     public List<TimeSegmentDTO> Segments { get; set; }
 }

@@ -32,6 +32,7 @@ public class OperationLogService : IOperationLogService
         if (currentMachineSession.Events.Count == 0)
         {
             currentMachineSession.Status = MachineSessionStatus.InProgress;
+            currentMachineSession.StartedAt = DateTime.UtcNow;
         }
 
         var operationLog = OperationLogMapper.ToEntity(addOperationLogDTO);

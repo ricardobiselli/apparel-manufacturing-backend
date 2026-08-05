@@ -1,16 +1,8 @@
-﻿using Domain.Models;
-
-namespace Application.Models.Requests
+﻿namespace Application.Models.Requests;
+public class AddMachineDTO
 {
-    public class AddMachineDTO
-    {
-        public int PostNumber { get; set; }
-        public string MachineName { get; set; }
-        public string MachineModel { get; set; }
-        public DateOnly PurchaseDate { get; set; }
-        public DateOnly InstallDate { get; set; }
-
-  
-
-    }
+    public int PostNumber { get; set; }
+    public string MachineName { get; set; }
+    public string MachineModel { get; set; }
+    public DateOnly InstallDate { get; set; }
 }

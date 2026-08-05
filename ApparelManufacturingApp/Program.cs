@@ -68,7 +68,6 @@ builder.Services.AddSwaggerGen(setupAction =>
     });
 });
 
-
 //builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -79,10 +78,14 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IGarmentRepository, GarmentRepository>();
 builder.Services.AddScoped<IMachineRepository, MachineRepository>();
-builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+//builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IMachineSessionRepository, MachineSessionRepository>();
 builder.Services.AddScoped<IOperationLogRepository, OperationLogRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+// Operation repository & service registration
+builder.Services.AddScoped<IOperationRepository, OperationRepository>();
+builder.Services.AddScoped<IOperationService, OperationService>();
 
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IProductionMetricsService, ProductionMetricsService>();

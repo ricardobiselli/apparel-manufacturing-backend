@@ -9,6 +9,6 @@ namespace Application.Interfaces
         Task<List<MachineDTO>> GetAllAsync();
         Task<MachineDTO> GetByIdAsync(int id);
         Task DeleteAsync(int id);
-        Task UpdateAsync(UpdateMachineDTO updateMachineDTO);
+        Task UpdateAsync(int id, UpdateMachineDTO updateMachineDTO);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums
 {
-    public enum EntitiesState
+    public enum EntityState
     {
         Active,
         Deleted,

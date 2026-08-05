@@ -14,7 +14,8 @@ namespace Application.Interfaces
         Task UpdateAsync(UpdateMachineSessionDTO updateMachineSessionDTO, int id);
         Task<MachineSessionDTO> GetActiveMachineSessionByMachineId(int id);
         Task<MachineSessionDTO> GetActiveMachineSessionByMachineIdWithDetailsIncluded(int id);
-        Task<ICollection<MachineSessionDTO>> GetPendingSessionsForActiveOrdersByMachineId(int machineId);
+        //Task<ICollection<MachineSessionDTO>> GetPendingSessionsForActiveOrdersByMachineId(int machineId);
+        Task<ICollection<MachineSessionDTO>> GetAllSessionsExceptPendingOrInProgressByMachineId(int machineId);
 
 
     }
