@@ -7,13 +7,42 @@ namespace Infrastructure.Data;
 public static class DbSeeder
 {
     public static void Seed(
-        ApplicationDbContext context,
-        IPasswordService passwordService)
+    ApplicationDbContext context,
+    IPasswordService passwordService)
     {
-        if (context.Users.Any())
-            return;
+        if (!context.Machines.Any())
+        {
+            context.Machines.AddRange(
+                new Machine
+                {
+                    PostNumber = 101,
+                    MachineName = "Automatic lockstitch 1 needle",
+                    MachineModel = "FIT F-21-M",
+                    InstallDate = new DateOnly(2026, 2, 15),
+                    Status = MachineStatus.Operational
+                },
+                new Machine
+                {
+                    PostNumber = 102,
+                    MachineName = "4 thread Overlock",
+                    MachineModel = "Sunsure SS 747",
+                    InstallDate = new DateOnly(2026, 2, 15),
+                    Status = MachineStatus.Operational
+                },
+                new Machine
+                {
+                    PostNumber = 103,
+                    MachineName = "Coverstitch",
+                    MachineModel = "Sunsure coverstitch multi-function",
+                    InstallDate = new DateOnly(2026, 2, 15),
+                    Status = MachineStatus.Operational
+                }
+            );
+        }
 
-        context.Users.AddRange(
+        if (!context.Users.Any())
+        {
+            context.Users.AddRange(
             new User
             {
                 EmployeeIdNumber = "1000",
@@ -62,7 +91,10 @@ public static class DbSeeder
                 State = EntityState.Active
             }
         );
+        }
 
         context.SaveChanges();
     }
 }
+
+
