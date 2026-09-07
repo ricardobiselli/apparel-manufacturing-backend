@@ -4,5 +4,6 @@
     {
         Admin = 0,
         Operator = 1,
+        Visitor = 2
     }
 }

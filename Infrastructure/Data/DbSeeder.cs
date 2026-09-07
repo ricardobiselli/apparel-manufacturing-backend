@@ -21,10 +21,22 @@ public static class DbSeeder
                 LastName = "Demo",
                 PasswordHash =
                     passwordService.HashPassword("admin123"),
-                Role = UserRole.Admin,
+                Role = UserRole.Visitor,
                 MustChangePassword = false,
                 State = EntityState.Active
             },
+
+                new User
+                {
+                    EmployeeIdNumber = "demo",
+                    FirstName = "Demo",
+                    LastName = "Visitor",
+                    PasswordHash =
+                    passwordService.HashPassword("demo123"),
+                    Role = UserRole.Admin,
+                    MustChangePassword = false,
+                    State = EntityState.Active
+                },
 
             new User
             {

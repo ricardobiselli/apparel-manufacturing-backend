@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,7 @@ namespace ApparelManufacturingApp.Controllers
         }
 
         [HttpPost("add-operation")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Add([FromBody] AddOperationDTO addOperationDTO)
         {
             if (!ModelState.IsValid)
@@ -44,6 +46,7 @@ namespace ApparelManufacturingApp.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateOperationDTO updateOperationDTO)
         {
             await _operationService.UpdateAsync(id, updateOperationDTO);
@@ -51,6 +54,7 @@ namespace ApparelManufacturingApp.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             await _operationService.DeleteAsync(id);

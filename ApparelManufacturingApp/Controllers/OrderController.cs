@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,8 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost("CreateOrder")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+
     public async Task<ActionResult<AddOrderDTO>> AddOrder(AddOrderDTO addOrderDTO)
     {
         await _orderService.AddAsync(addOrderDTO);
@@ -47,6 +50,8 @@ public class OrderController : ControllerBase
     }
 
     [HttpDelete("Delete/{id}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+
     public async Task<ActionResult> Delete([FromRoute] int id)
     {
         var order = await _orderService.GetByIdAsync(id);
@@ -55,6 +60,8 @@ public class OrderController : ControllerBase
     }
 
     [HttpPut("Update")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+
     public async Task<ActionResult> Update(UpdateOrderDTO dto)
     {
         

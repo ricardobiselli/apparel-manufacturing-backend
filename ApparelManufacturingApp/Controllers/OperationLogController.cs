@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,6 +63,7 @@ public class OperationLogController : ControllerBase
     }
 
     [HttpPost("CreateOperationLog")]
+    [Authorize(Roles = nameof(UserRole.Operator))]
     public async Task<ActionResult> Create([FromBody] AddOperationLogDTO addOperationLogDto)
     {
         var createdOperationLog = await _operationLogService.AddOperationLogAsync(addOperationLogDto);
@@ -70,6 +72,8 @@ public class OperationLogController : ControllerBase
     }
 
     [HttpPost("CreateExceptionLog")]
+    [Authorize(Roles = nameof(UserRole.Operator))]
+
     public async Task<ActionResult> Create([FromBody] AddMachineExceptionLogDTO machineExceptionLogDTO)
     {
         var createdExceptionLog = await _operationLogService.AddMachineExceptionLogAsync(machineExceptionLogDTO);
@@ -78,6 +82,8 @@ public class OperationLogController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+
     public async Task<ActionResult> Update([FromRoute] int id, [FromBody] UpdateOperationLogDTO operationLogDTO)
     {
         await _operationLogService.UpdateAsync(operationLogDTO, id);
@@ -85,6 +91,8 @@ public class OperationLogController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+
     public async Task<ActionResult> Delete([FromRoute] int id)
     {
         var operationLog = await _operationLogService.GetOperationLogByIdAsync(id);
