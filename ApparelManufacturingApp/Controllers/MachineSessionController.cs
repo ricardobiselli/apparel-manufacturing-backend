@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
+using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -62,6 +64,7 @@ public class MachineSessionController : ControllerBase
     }
 
     [HttpPost("AddMachineSession")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<IActionResult> Add([FromBody] AddMachineSessionDTO addMachineSessionDTO)
     {
         if (!ModelState.IsValid)
@@ -73,6 +76,7 @@ public class MachineSessionController : ControllerBase
 
 
     [HttpPut]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<ActionResult> Update([FromRoute] int id, [FromBody] UpdateMachineSessionDTO updateMachineSessionDTO)
     {
         await _machineSessionService.UpdateAsync(updateMachineSessionDTO, id);
@@ -81,6 +85,7 @@ public class MachineSessionController : ControllerBase
 
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<ActionResult> Delete(int id)
     {
         var machineSession = await _machineSessionService.GetByIdWithDetailsAsync(id);

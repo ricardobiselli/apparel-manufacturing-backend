@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace ApparelManufacturingApp.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    [AllowAnonymous]
+    //[AllowAnonymous]
 
     public class GarmentController : ControllerBase
     {
@@ -31,6 +32,7 @@ namespace ApparelManufacturingApp.Controllers
         }
 
         [HttpPost("AddGarment")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<ActionResult> AddGarment(CreateGarmentDTO addGarmentDTO)
         {
 
@@ -48,6 +50,7 @@ namespace ApparelManufacturingApp.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
 

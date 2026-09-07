@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,7 @@ namespace ApparelManufacturingApp.Controllers
         }
 
         [HttpPost("add-machine")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Add([FromBody] AddMachineDTO addMachineDTO)
         {
             if (!ModelState.IsValid)
@@ -51,6 +53,7 @@ namespace ApparelManufacturingApp.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateMachineDTO updateMachineDTO)
         {
             await _machineService.UpdateAsync(id, updateMachineDTO);
@@ -58,6 +61,7 @@ namespace ApparelManufacturingApp.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
 
