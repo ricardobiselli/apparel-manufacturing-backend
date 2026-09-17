@@ -37,6 +37,7 @@ public class MachineSessionService : IMachineSessionService
             MachineId = dto.MachineId,
             GarmentId = dto.GarmentId,
             OperationId = operation.OperationId,
+            UserId = dto.UserId,
             Status = dto.Status,
 
             // Snapshot

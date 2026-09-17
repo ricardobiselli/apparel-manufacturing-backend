@@ -25,6 +25,7 @@ namespace ApparelManufacturingApp.Controllers
 
 
         [HttpGet("GetAll")]
+        //[Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<ActionResult<ICollection<GarmentDTO>>> GetGarments()
         {
             var garments = await _garmentService.GetAllAsync();

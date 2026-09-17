@@ -4,6 +4,7 @@
     public int MachineSessionId { get; set; }
     public int MachineId { get; set; }
     public int GarmentId { get; set; }
+    public int? UserId {  get; set; }
     public string GarmentName { get; set; }
     public int OperationId { get; set; }
     public string OperationName { get; set; }

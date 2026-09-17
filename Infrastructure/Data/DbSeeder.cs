@@ -42,35 +42,49 @@ public static class DbSeeder
         }
 
 
-        if (!context.Users.Any())
+        if (!context.Users.Any(u => u.EmployeeIdNumber == "1000"))
         {
-            context.Users.AddRange(
-                new User
-                {
-                    EmployeeIdNumber = "1000",
-                    FirstName = "Admin",
-                    LastName = "Demo",
-                    PasswordHash = passwordService.HashPassword("admin123"),
-                    Role = UserRole.Admin,
-                    MustChangePassword = false,
-                    State = EntityState.Active
-                },
-
-                new User
-                {
-                    EmployeeIdNumber = "2001",
-                    FirstName = "natalia",
-                    LastName = "natalia",
-                    PasswordHash = passwordService.HashPassword("operator123"),
-                    Role = UserRole.Operator,
-                    MustChangePassword = false,
-                    State = EntityState.Active
-                }
-            );
-
-            context.SaveChanges();
+            context.Users.Add(new User
+            {
+                EmployeeIdNumber = "1000",
+                FirstName = "Admin",
+                LastName = "Demo",
+                PasswordHash = passwordService.HashPassword("admin123"),
+                Role = UserRole.Admin,
+                MustChangePassword = false,
+                State = EntityState.Active
+            });
         }
 
+        if (!context.Users.Any(u => u.EmployeeIdNumber == "2001"))
+        {
+            context.Users.Add(new User
+            {
+                EmployeeIdNumber = "2001",
+                FirstName = "Ricardo",
+                LastName = "Biselli",
+                PasswordHash = passwordService.HashPassword("operator123"),
+                Role = UserRole.Operator,
+                MustChangePassword = false,
+                State = EntityState.Active
+            });
+        }
+
+        if (!context.Users.Any(u => u.EmployeeIdNumber == "9000"))
+        {
+            context.Users.Add(new User
+            {
+                EmployeeIdNumber = "9000",
+                FirstName = "Recruiter",
+                LastName = "Demo",
+                PasswordHash = passwordService.HashPassword("demo123"),
+                Role = UserRole.Operator,
+                MustChangePassword = false,
+                State = EntityState.Active
+            });
+        }
+
+        context.SaveChanges();
 
         if (!context.Garments.Any())
         {

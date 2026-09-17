@@ -23,6 +23,7 @@ namespace Application.Mappers
                 GarmentId = machineSession.GarmentId,
                 GarmentName = machineSession.Garment.GarmentName,
                 OperationId = machineSession.OperationId,
+                UserId = machineSession.UserId,
                 OperationName = machineSession.OperationName,
                 OperationDescription = machineSession.OperationDescription,
                 BaseTime = machineSession.BaseTime,

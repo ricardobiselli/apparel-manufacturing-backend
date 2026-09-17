@@ -19,6 +19,12 @@ namespace Infrastructure.Data.Repositories
                 .FirstOrDefaultAsync(u => u.UserId == id);
         }
 
+        public async Task<User?> GetByIdAsync(int? id)
+        {
+            return await _context.Set<User>()
+                .FirstOrDefaultAsync(u => u.UserId == id);
+        }
+
         public async Task<User?> GetByEmployeeNumberAsync(string employeeIdNumber)
         {
             return await _context.Set<User>()

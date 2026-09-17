@@ -9,6 +9,8 @@
         public Machine Machine { get; set; }
         public int GarmentId { get; set; }
         public Garment Garment { get; set; }
+        public int? UserId { get; set; }
+        public User User { get; set; }
         //public Operation Operation { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? StartedAt { get; set; }

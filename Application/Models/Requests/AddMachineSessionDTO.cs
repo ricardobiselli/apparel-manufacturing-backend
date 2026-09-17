@@ -6,6 +6,7 @@
         public int MachineId { get; set; }
         public int GarmentId { get; set; }
         public int OperationId { get; set; }
+        public int? UserId { get; set; }
         public MachineSessionStatus Status { get; set; } = MachineSessionStatus.Pending;
 
     }

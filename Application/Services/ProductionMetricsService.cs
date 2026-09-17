@@ -12,13 +12,15 @@ public class ProductionMetricsService : IProductionMetricsService
     private readonly IMachineSessionRepository _machineSessionRepository;
     private readonly IOrderRepository _orderRepository;
     private readonly IGarmentRepository _garmentRepository;
+    private readonly IUserRepository _userRepository;
 
-    public ProductionMetricsService(IMachineSessionTimeCalculator timeCalculator, IMachineSessionRepository machineSessionRepository, IOrderRepository orderRepository, IGarmentRepository garmentRepository)
+    public ProductionMetricsService(IMachineSessionTimeCalculator timeCalculator, IMachineSessionRepository machineSessionRepository, IOrderRepository orderRepository, IGarmentRepository garmentRepository, IUserRepository userRepository)
     {
         _timeCalculator = timeCalculator;
         _garmentRepository = garmentRepository;
         _orderRepository = orderRepository;
         _machineSessionRepository = machineSessionRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<ProductionMetricsDTO> CalculateMetrics(int sessionId)
@@ -27,6 +29,8 @@ public class ProductionMetricsService : IProductionMetricsService
 
         var currentOrder =
             await _orderRepository.GetByIdAsync(currentSession.OrderId);
+
+        var currentOperator = await _userRepository.GetByIdAsync(currentSession.UserId);
 
         var orderGarment = currentOrder.OrderGarments
             .FirstOrDefault(og => og.GarmentId == currentSession.GarmentId);
@@ -65,6 +69,8 @@ public class ProductionMetricsService : IProductionMetricsService
         return new ProductionMetricsDTO
         {
             OperationId = currentSession.OperationId,
+            EmployeeNumber = currentOperator?.EmployeeIdNumber,
+            OperatorName = currentOperator != null ? $"{currentOperator.FirstName} {currentOperator.LastName}" : "Not assigned",
             OperationName = currentSession.OperationName,
             BaseTime = currentSession.BaseTime,
             UnitsPerGarment = currentSession.UnitsPerGarment,
