@@ -3,15 +3,17 @@
     public class MachineSession
     {
         public int MachineSessionId { get; set; }
+        //OrderId and GarmentId now also accesible through Bundle -> CutBatch 
         public int OrderId { get; set; }
         public Order Order { get; set; }
-        public int MachineId { get; set; }
-        public Machine Machine { get; set; }
         public int GarmentId { get; set; }
         public Garment Garment { get; set; }
+        public int MachineId { get; set; }
+        public Machine Machine { get; set; }
         public int? UserId { get; set; }
         public User User { get; set; }
-        //public Operation Operation { get; set; }
+        public int? BundleId { get; set; }
+        public Bundle? Bundle { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? StartedAt { get; set; }
         public DateTime? EndedAt { get; set; }
