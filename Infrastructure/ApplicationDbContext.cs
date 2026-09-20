@@ -17,6 +17,11 @@ namespace Infrastructure
         public DbSet<MachineSession> MachineSessions { get; set; }
         public DbSet<OperationLog> OperationLogs { get; set; }
         public DbSet<MachineExceptionLog> MachineExceptionLogs { get; set; }
+        public DbSet<CutBatch> CutBatches { get; set; }
+        public DbSet<CutBatchSize> CutBatchSizes { get; set; }
+        public DbSet<Size> Sizes { get; set; }
+        public DbSet<Bundle> Bundles { get; set; }
+        public DbSet<BundleSize> BundleSizes { get; set; }
 
 
 
@@ -55,7 +60,61 @@ namespace Infrastructure
                       .HasValue<MachineExceptionLog>("MachineExceptionLog");
             });
 
+            modelBuilder.Entity<CutBatch>()
+                .HasOne(cb => cb.Order)
+                .WithMany(o => o.CutBatches)
+                .HasForeignKey(cb => cb.OrderId);
 
+            modelBuilder.Entity<CutBatch>()
+                .HasOne(cb => cb.Garment)
+                .WithMany()
+                .HasForeignKey(cb => cb.GarmentId);
+
+            modelBuilder.Entity<CutBatchSize>()
+                .HasKey(cbs => new
+                {
+                    cbs.CutBatchId,
+                    cbs.SizeId
+                });
+
+            modelBuilder.Entity<CutBatchSize>()
+                .HasOne(cbs => cbs.CutBatch)
+                .WithMany(cb => cb.Sizes)
+                .HasForeignKey(cbs => cbs.CutBatchId);
+
+            modelBuilder.Entity<CutBatchSize>()
+                .HasOne(cbs => cbs.Size)
+                .WithMany(s => s.CutBatchSizes)
+                .HasForeignKey(cbs => cbs.SizeId);
+
+            modelBuilder.Entity<Bundle>()
+                .HasOne(b => b.CutBatch)
+                .WithMany(cb => cb.Bundles)
+                .HasForeignKey(b => b.CutBatchId);
+
+            modelBuilder.Entity<BundleSize>()
+                .HasKey(bs => new
+                {
+                    bs.BundleId,
+                    bs.SizeId
+                });
+
+            modelBuilder.Entity<BundleSize>()
+                .HasOne(bs => bs.Bundle)
+                .WithMany(b => b.Sizes)
+                .HasForeignKey(bs => bs.BundleId);
+
+            modelBuilder.Entity<BundleSize>()
+                .HasOne(bs => bs.Size)
+                .WithMany(s => s.BundleSizes)
+                .HasForeignKey(bs => bs.SizeId);
+
+
+            modelBuilder.Entity<MachineSession>()
+                .HasOne(ms => ms.Bundle)
+                .WithMany(b => b.MachineSessions)
+                .HasForeignKey(ms => ms.BundleId)
+                .IsRequired(false);
         }
     }
 }

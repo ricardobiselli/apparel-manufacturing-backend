@@ -71,7 +71,7 @@ namespace Infrastructure.Repositories
         public async Task<MachineSession?> GetByIdAsyncIncludingLogs(int id)
         {
             return await _context.Set<MachineSession>()
-                .Include(e => e.Events)
+                .Include(e => e.Events.OrderBy(ev=>ev.Timestamp))
                 .SingleOrDefaultAsync(ms => ms.MachineSessionId == id);
         }
 

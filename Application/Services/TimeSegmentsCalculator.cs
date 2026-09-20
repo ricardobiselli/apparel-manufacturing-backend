@@ -18,9 +18,8 @@ public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
     {
         var session = await _machineSessionRepository.GetByIdAsyncIncludingLogs(sessionId);
 
-        var events = session.Events
-            .OrderBy(ev => ev.Timestamp)
-            .ToList();
+        var events = session.Events.ToList();
+        //.OrderBy(ev => ev.Timestamp) moved to the repository
 
         var segments = new List<TimeSegmentDTO>();
 
