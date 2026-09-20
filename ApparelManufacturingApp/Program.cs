@@ -82,6 +82,7 @@ builder.Services.AddScoped<IMachineRepository, MachineRepository>();
 builder.Services.AddScoped<IMachineSessionRepository, MachineSessionRepository>();
 builder.Services.AddScoped<IOperationLogRepository, OperationLogRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IFabricRollRepository, FabricRollRepository>();
 
 // Operation repository & service registration
 builder.Services.AddScoped<IOperationRepository, OperationRepository>();
@@ -95,6 +96,7 @@ builder.Services.AddScoped<IMachineService, MachineService>();
 builder.Services.AddScoped<IMachineSessionService, MachineSessionService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOperationLogService, OperationLogService>();
+builder.Services.AddScoped<IFabricRollService, FabricRollService>();
 
 //// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 

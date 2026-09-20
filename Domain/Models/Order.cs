@@ -8,6 +8,7 @@ public class Order
     public OrderStatus Status { get; set; } 
     public ICollection<OrderGarment> OrderGarments { get; set; } = new List<OrderGarment>();
     public ICollection<MachineSession> MachineSessions { get; set; } = new List<MachineSession>();
+    public ICollection<FabricRoll>FabricRolls { get; set; } = new List<FabricRoll>();
     public ICollection<CutBatch> CutBatches { get; set; } = new List<CutBatch>();
 
     public Order()
