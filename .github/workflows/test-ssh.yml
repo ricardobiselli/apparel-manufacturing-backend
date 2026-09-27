@@ -21,9 +21,9 @@ jobs:
           echo "Key fingerprint:"
           ssh-keygen -lf ~/.ssh/deploy_key
 
-      - name: Test remote deployment access
+      - name: Test remote Git access
         run: |
           ssh -o StrictHostKeyChecking=no \
           -i ~/.ssh/deploy_key \
           ricardo@${{ secrets.DEPLOY_HOST }} \
-          "cd ~/apps/apparel-manufacturing-backend && pwd && git branch --show-current && git status --short"
+          "cd ~/apps/apparel-manufacturing-backend && git fetch origin && git status && git log -1 --oneline"
