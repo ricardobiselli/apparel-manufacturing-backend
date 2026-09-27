@@ -21,9 +21,11 @@ jobs:
           echo "Key fingerprint:"
           ssh-keygen -lf ~/.ssh/deploy_key
 
-      - name: Update production code
+      - name: Deploy application
         run: |
           ssh -o StrictHostKeyChecking=no \
-          -i ~/.ssh/deploy_key \
-          ricardo@${{ secrets.DEPLOY_HOST }} \
-          "cd ~/apps/apparel-manufacturing-backend && git pull --ff-only origin main && git log -1 --oneline"
+              -i ~/.ssh/deploy_key \
+              ricardo@${{ secrets.DEPLOY_HOST }} \
+              "cd ~/apps/apparel-manufacturing-backend && \
+               dotnet publish ApparelManufacturingApp/ApparelManufacturingApp.csproj -c Release && \
+               sudo systemctl restart apparel-backend.service"
