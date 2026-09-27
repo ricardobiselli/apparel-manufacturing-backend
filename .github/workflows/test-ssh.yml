@@ -27,5 +27,5 @@ jobs:
               -i ~/.ssh/deploy_key \
               ricardo@${{ secrets.DEPLOY_HOST }} \
               "cd ~/apps/apparel-manufacturing-backend && \
-               dotnet publish ApparelManufacturingApp/ApparelManufacturingApp.csproj -c Release && \
-               sudo systemctl restart apparel-backend.service"
+              /home/ricardo/.dotnet/dotnet publish ApparelManufacturingApp/ApparelManufacturingApp.csproj -c Release
+              sudo systemctl restart apparel-backend.service"
