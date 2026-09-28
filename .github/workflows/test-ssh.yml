@@ -31,3 +31,4 @@ jobs:
               "cd ~/apps/apparel-manufacturing-backend && \
               /home/ricardo/.dotnet/dotnet publish ApparelManufacturingApp/ApparelManufacturingApp.csproj -c Release
               sudo systemctl restart apparel-backend.service"
+              curl -f http://127.0.0.1:5000/health
