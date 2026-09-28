@@ -1,4 +1,4 @@
-name: Test VPS SSH
+name: Deploy Backend
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test-ssh:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,13 +15,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-
-      - name: Validate SSH key
-        run: |
-          echo "Key file information:"
-          wc -c ~/.ssh/deploy_key
-          echo "Key fingerprint:"
-          ssh-keygen -lf ~/.ssh/deploy_key
 
       - name: Deploy application
         run: |
