@@ -4,7 +4,7 @@ using Application.Models.Requests;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ApparelManufacturingApp.Controllers;
 
@@ -75,10 +75,25 @@ public class MachineSessionController : ControllerBase
     }
 
 
-    [HttpPut]
-    [Authorize(Roles = nameof(UserRole.Admin))]
+    // Allow Admins and Operators to update sessions.
+    // Operators will have their user id assigned to the session automatically.
+    [HttpPut("Update/{id}")]
+    [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Operator))]
     public async Task<ActionResult> Update([FromRoute] int id, [FromBody] UpdateMachineSessionDTO updateMachineSessionDTO)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        // If caller is an operator, set the UserId from the JWT 'sub' claim to prevent impersonation.
+        if (User.IsInRole(nameof(UserRole.Operator)))
+        {
+            var sub = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (int.TryParse(sub, out var currentUserId))
+            {
+                updateMachineSessionDTO.UserId = currentUserId;
+            }
+        }
+
         await _machineSessionService.UpdateAsync(updateMachineSessionDTO, id);
         return NoContent();
     }
