@@ -37,7 +37,7 @@ public class MachineSessionService : IMachineSessionService
             MachineId = dto.MachineId,
             GarmentId = dto.GarmentId,
             OperationId = operation.OperationId,
-            UserId = dto.UserId,
+            //UserId = dto.UserId,
             Status = dto.Status,
 
             // Snapshot
@@ -99,7 +99,44 @@ public class MachineSessionService : IMachineSessionService
     }
     public async Task UpdateAsync(UpdateMachineSessionDTO updateMachineSessionDTO, int id)
     {
-        throw new NotImplementedException();
+        var existing = await _machineSessionRepository.GetByIdAsync(id);
+        if (existing == null)
+            throw new KeyNotFoundException($"MachineSession with id {id} not found.");
+
+        // If caller provided a user id (controller will set operator id), set it
+        if (updateMachineSessionDTO.UserId.HasValue)
+            existing.UserId = updateMachineSessionDTO.UserId.Value;
+
+        // Update status & timestamps with sensible defaults
+        if (updateMachineSessionDTO.Status.HasValue)
+        {
+            var newStatus = updateMachineSessionDTO.Status.Value;
+
+            // When an operator starts the session, set StartedAt if missing
+            if (newStatus == MachineSessionStatus.InProgress && existing.StartedAt == null)
+            {
+                existing.StartedAt = updateMachineSessionDTO.StartedAt ?? DateTime.UtcNow;
+            }
+
+            // When marking completed, set EndedAt if missing
+            if (newStatus == MachineSessionStatus.Completed && existing.EndedAt == null)
+            {
+                existing.EndedAt = updateMachineSessionDTO.EndedAt ?? DateTime.UtcNow;
+            }
+
+            existing.Status = newStatus;
+        }
+        else
+        {
+            // If status not provided, allow updating individual timestamps
+            if (updateMachineSessionDTO.StartedAt.HasValue)
+                existing.StartedAt = updateMachineSessionDTO.StartedAt.Value;
+
+            if (updateMachineSessionDTO.EndedAt.HasValue)
+                existing.EndedAt = updateMachineSessionDTO.EndedAt.Value;
+        }
+
+        await _machineSessionRepository.UpdateAsync(existing);
     }
 
     public async Task<ICollection<MachineSessionDTO>> GetAllSessionsExceptPendingOrInProgressByMachineId(int machineId)
