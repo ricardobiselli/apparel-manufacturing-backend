@@ -29,17 +29,15 @@ jobs:
               -i ~/.ssh/deploy_key \
               ricardo@${{ secrets.DEPLOY_HOST }} \
               "cd ~/apps/apparel-manufacturing-backend && \
-              /home/ricardo/.dotnet/dotnet publish ApparelManufacturingApp/ApparelManufacturingApp.csproj -c Release
-              sudo systemctl restart apparel-backend.service"
-                for i in {1..10}; do
-                  if curl -f http://127.0.0.1:5000/health; then
-                    echo "Health check passed."
-                    exit 0
-                  fi
-                
-                  echo "Health check failed. Waiting for application to start..."
-                  sleep 2
-                done
-              
-              echo "Health check failed after 20 seconds."
-              exit 1
+              /home/ricardo/.dotnet/dotnet publish ApparelManufacturingApp/ApparelManufacturingApp.csproj -c Release && \
+              sudo systemctl restart apparel-backend.service && \
+              for i in {1..10}; do \
+                if curl -f http://127.0.0.1:5000/health; then \
+                  echo 'Health check passed.'; \
+                  exit 0; \
+                fi; \
+                echo 'Health check failed. Waiting for application to start...'; \
+                sleep 2; \
+              done; \
+              echo 'Health check failed after 20 seconds.'; \
+              exit 1"
