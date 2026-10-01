@@ -48,10 +48,11 @@ public class OperationLogService : IOperationLogService
 
         if (currentMachineSession.Status == MachineSessionStatus.Completed)
             throw new InvalidOperationException("Cannot add an exception log to a completed machine session.");
-        
+
         if (currentMachineSession.Events.Count == 0)
         {
             currentMachineSession.Status = MachineSessionStatus.InProgress;
+            currentMachineSession.StartedAt = DateTime.UtcNow;
         }
 
         var machineExceptionLog = MachineExceptionLogMapper.ToEntity(addMachineExceptionLogDTO);
