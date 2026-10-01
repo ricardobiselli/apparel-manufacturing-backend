@@ -6,5 +6,6 @@
     Break,
     EndOfDay,
     EndOfProduction, //end of session
-    WaitingForBundleOrSupplies
+    WaitingForBundleOrSupplies,
+    OperationDeferred
 }

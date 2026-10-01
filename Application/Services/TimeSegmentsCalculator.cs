@@ -74,6 +74,8 @@ public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
                         return SegmentType.EndOfProduction;
                     case MachineExceptionType.WaitingForBundleOrSupplies:
                         return SegmentType.NonWorkingTime;
+                    case MachineExceptionType.OperationDeferred:
+                        return SegmentType.NonWorkingTime;
                     default:
                         return SegmentType.Unknown;
                 }
