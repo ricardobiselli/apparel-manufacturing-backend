@@ -17,7 +17,9 @@ namespace Application.Mappers
                 WeightOrLength = entity.WeightOrLength,
                 Yield = entity.Yield,
                 Date = entity.Date,
-                BarCode = entity.BarCode
+                BarCode = entity.BarCode,
+                Supplier = entity.Supplier,
+                State = entity.State
             };
         }
     }

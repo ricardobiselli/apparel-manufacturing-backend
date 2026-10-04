@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Enums;
 
 namespace Domain.Models;
 
@@ -14,8 +10,9 @@ public class FabricRoll
     public string? FabricRollDescription { get; set; }
     public double WeightOrLength { get; set; }
     public double Yield { get; set; }
-    public DateOnly Date { get; set; }
+    public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
     public int? BarCode { get; set; }
-
+    public string Supplier { get; set; }
+    public FabricRollState State { get; set; } = FabricRollState.Available;
     public FabricRoll() { }
 }

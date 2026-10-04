@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Domain.Enums;
 
 namespace Application.Models
 {
@@ -12,5 +12,7 @@ namespace Application.Models
         public double Yield { get; set; }
         public DateOnly Date { get; set; }
         public int? BarCode { get; set; }
-    }
+        public string Supplier { get; set; }
+        public FabricRollState State { get; set; }
+        }
 }

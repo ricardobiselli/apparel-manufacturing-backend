@@ -22,6 +22,7 @@ namespace Infrastructure
         public DbSet<Size> Sizes { get; set; }
         public DbSet<Bundle> Bundles { get; set; }
         public DbSet<BundleSize> BundleSizes { get; set; }
+        public DbSet<OrderGarmentSize> OrderGarmentSizes { get; set; }
 
 
 
@@ -115,6 +116,28 @@ namespace Infrastructure
                 .WithMany(b => b.MachineSessions)
                 .HasForeignKey(ms => ms.BundleId)
                 .IsRequired(false);
+
+            modelBuilder.Entity<OrderGarmentSize>()
+                .HasKey(ogs => new
+                {
+                    ogs.OrderId,
+                    ogs.GarmentId,
+                    ogs.SizeId
+                });
+
+            modelBuilder.Entity<OrderGarmentSize>()
+                .HasOne(ogs => ogs.OrderGarment)
+                .WithMany(og => og.Sizes)
+                .HasForeignKey(ogs => new
+                {
+                    ogs.OrderId,
+                    ogs.GarmentId
+                });
+
+            modelBuilder.Entity<OrderGarmentSize>()
+                .HasOne(ogs => ogs.Size)
+                .WithMany(s => s.OrderGarmentSizes)
+                .HasForeignKey(ogs => ogs.SizeId);
         }
     }
 }

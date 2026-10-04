@@ -57,14 +57,42 @@ namespace Application.Services
             return GarmentMapper.ToDto(savedGarment);
         }
 
-        public async Task UpdateAsync(UpdateGarmentDTO updateGarmentDTO, int id)
+        public async Task UpdateAsync(UpdateGarmentDTO dto, int id)
         {
-            throw new NotImplementedException();
+            var garment = await _garmentRepository.GetByIdWithOperationsAsync(id);
 
+            if (garment == null)
+                throw new KeyNotFoundException($"Garment with id {id} not found.");
+
+            garment.GarmentName = dto.GarmentName;
+            garment.GarmentDescription = dto.GarmentDescription;
+
+            foreach (var operationDto in dto.Operations ?? [])
+            {
+                var operation = garment.Operations
+                    .FirstOrDefault(o => o.OperationId == operationDto.OperationId);
+
+                if (operation == null)
+                {
+                    garment.Operations.Add(new Operation
+                    {
+                        OperationName = operationDto.OperationName,
+                        OperationDescription = operationDto.OperationDescription,
+                        BaseTime = operationDto.BaseTime,
+                        UnitsPerGarment = operationDto.UnitsPerGarment
+                    });
+
+                    continue;
+                }
+
+                operation.OperationName = operationDto.OperationName;
+                operation.OperationDescription = operationDto.OperationDescription;
+                operation.BaseTime = operationDto.BaseTime;
+                operation.UnitsPerGarment = operationDto.UnitsPerGarment;
+            }
+
+            await _garmentRepository.UpdateAsync(garment);
         }
-
-
-
     }
 }
 
