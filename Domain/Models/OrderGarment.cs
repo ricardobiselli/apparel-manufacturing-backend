@@ -9,5 +9,6 @@
         public Garment Garment { get; set; }
 
         public int Quantity { get; set; }
+        public ICollection<OrderGarmentSize> Sizes { get; set; } = new List<OrderGarmentSize>();
     }
 }

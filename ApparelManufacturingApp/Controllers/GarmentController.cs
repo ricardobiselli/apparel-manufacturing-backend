@@ -11,11 +11,9 @@ namespace ApparelManufacturingApp.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    //[AllowAnonymous]
 
     public class GarmentController : ControllerBase
     {
-
         private readonly IGarmentService _garmentService;
 
         public GarmentController(IGarmentService garmentService)
@@ -36,10 +34,11 @@ namespace ApparelManufacturingApp.Controllers
         [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<ActionResult> AddGarment(CreateGarmentDTO addGarmentDTO)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             await _garmentService.AddAsync(addGarmentDTO);
             return Ok();
-
         }
 
         [HttpGet("Get-One/{id}")]
@@ -50,25 +49,24 @@ namespace ApparelManufacturingApp.Controllers
             return Ok(garmentDto);
         }
 
+        [HttpPut("Update/{id}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
+        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] UpdateGarmentDTO updateGarmentDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _garmentService.UpdateAsync(updateGarmentDTO, id);
+            return NoContent();
+        }
+
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
-
             var garment = await _garmentService.GetByIdAsync(id);
             await _garmentService.DeleteAsync(id);
             return NoContent();
         }
-
-        //[HttpPut("Update")]
-        //public async Task<ActionResult> Update([FromRoute] int id, [FromBody] CreateGarmentForClientsDTO garmentDto)
-        //{
-
-
-        //    await _garmentService.UpdateAsync(garmentDto, id);
-        //    return NoContent();
-        //}
-
     }
-
 }

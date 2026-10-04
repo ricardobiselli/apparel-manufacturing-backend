@@ -102,7 +102,9 @@ public class MachineSessionService : IMachineSessionService
         var existing = await _machineSessionRepository.GetByIdAsync(id);
         if (existing == null)
             throw new KeyNotFoundException($"MachineSession with id {id} not found.");
-
+        //
+        // REVISIT THIS PART LATER:
+        //
         // If caller provided a user id (controller will set operator id), set it
         if (updateMachineSessionDTO.UserId.HasValue)
             existing.UserId = updateMachineSessionDTO.UserId.Value;
@@ -136,6 +138,17 @@ public class MachineSessionService : IMachineSessionService
                 existing.EndedAt = updateMachineSessionDTO.EndedAt.Value;
         }
 
+        if (updateMachineSessionDTO.OperationName != null)
+            existing.OperationName = updateMachineSessionDTO.OperationName;
+
+        if (updateMachineSessionDTO.OperationDescription != null)
+            existing.OperationDescription = updateMachineSessionDTO.OperationDescription;
+
+        if (updateMachineSessionDTO.BaseTime.HasValue)
+            existing.BaseTime = updateMachineSessionDTO.BaseTime.Value;
+
+        if (updateMachineSessionDTO.UnitsPerGarment.HasValue)
+            existing.UnitsPerGarment = updateMachineSessionDTO.UnitsPerGarment.Value;
         await _machineSessionRepository.UpdateAsync(existing);
     }
 

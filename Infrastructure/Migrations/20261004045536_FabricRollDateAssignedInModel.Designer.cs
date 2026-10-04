@@ -3,6 +3,7 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261004045536_FabricRollDateAssignedInModel")]
+    partial class FabricRollDateAssignedInModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,9 +78,6 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CutBatchId"));
 
-                    b.Property<int?>("ActualQuantity")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -87,7 +87,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PlannedQuantity")
+                    b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
                     b.HasKey("CutBatchId");
@@ -107,10 +107,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("SizeId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ActualQuantity")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PlannedQuantity")
+                    b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
                     b.HasKey("CutBatchId", "SizeId");
@@ -447,27 +444,6 @@ namespace Infrastructure.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("OrderGarmentSize", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("GarmentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("OrderId", "GarmentId", "SizeId");
-
-                    b.HasIndex("SizeId");
-
-                    b.ToTable("OrderGarmentSizes");
-                });
-
             modelBuilder.Entity("Size", b =>
                 {
                     b.Property<int>("SizeId")
@@ -661,25 +637,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("MachineSession");
                 });
 
-            modelBuilder.Entity("OrderGarmentSize", b =>
-                {
-                    b.HasOne("Size", "Size")
-                        .WithMany("OrderGarmentSizes")
-                        .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.OrderGarment", "OrderGarment")
-                        .WithMany("Sizes")
-                        .HasForeignKey("OrderId", "GarmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrderGarment");
-
-                    b.Navigation("Size");
-                });
-
             modelBuilder.Entity("Bundle", b =>
                 {
                     b.Navigation("MachineSessions");
@@ -717,18 +674,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("OrderGarments");
                 });
 
-            modelBuilder.Entity("Domain.Models.OrderGarment", b =>
-                {
-                    b.Navigation("Sizes");
-                });
-
             modelBuilder.Entity("Size", b =>
                 {
                     b.Navigation("BundleSizes");
 
                     b.Navigation("CutBatchSizes");
-
-                    b.Navigation("OrderGarmentSizes");
                 });
 #pragma warning restore 612, 618
         }

@@ -42,7 +42,6 @@ namespace Application.Services
                 FabricRollDescription = createFabricRollDTO.FabricRollDescription,
                 WeightOrLength = createFabricRollDTO.WeightOrLength,
                 Yield = createFabricRollDTO.Yield,
-                Date = createFabricRollDTO.Date ?? DateOnly.FromDateTime(DateTime.UtcNow),
                 BarCode = createFabricRollDTO.BarCode
             };
 
@@ -63,10 +62,11 @@ namespace Application.Services
             existing.FabricRollName = updateFabricRollDTO.FabricRollName ?? existing.FabricRollName;
             existing.Color = updateFabricRollDTO.Color ?? existing.Color;
             existing.FabricRollDescription = updateFabricRollDTO.FabricRollDescription ?? existing.FabricRollDescription;
-            if (updateFabricRollDTO.WeightOrLength.HasValue) existing.WeightOrLength = updateFabricRollDTO.WeightOrLength.Value;
-            if (updateFabricRollDTO.Yield.HasValue) existing.Yield = updateFabricRollDTO.Yield.Value;
-            if (updateFabricRollDTO.Date.HasValue) existing.Date = updateFabricRollDTO.Date.Value;
-            if (updateFabricRollDTO.BarCode.HasValue) existing.BarCode = updateFabricRollDTO.BarCode;
+            existing.WeightOrLength = updateFabricRollDTO.WeightOrLength;
+            existing.Yield = updateFabricRollDTO.Yield;
+            existing.BarCode = updateFabricRollDTO.BarCode;
+            existing.Supplier = updateFabricRollDTO.Supplier;
+            existing.State = updateFabricRollDTO.State;
 
             await _fabricRollRepository.UpdateAsync(existing);
         }
