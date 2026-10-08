@@ -41,6 +41,23 @@ public static class DbSeeder
             context.SaveChanges();
         }
 
+        // Seed standard international letter sizes if missing
+        if (!context.Sizes.Any())
+        {
+            context.Sizes.AddRange(
+                new Size { SizeName = "XXS" },
+                new Size { SizeName = "XS" },
+                new Size { SizeName = "S" },
+                new Size { SizeName = "M" },
+                new Size { SizeName = "L" },
+                new Size { SizeName = "XL" },
+                new Size { SizeName = "XXL" },
+                new Size { SizeName = "XXXL" }
+            );
+
+            context.SaveChanges();
+        }
+
 
         if (!context.Users.Any(u => u.EmployeeIdNumber == "1000"))
         {

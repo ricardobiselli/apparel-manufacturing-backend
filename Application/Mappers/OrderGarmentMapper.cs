@@ -15,7 +15,14 @@ namespace Application.Mappers
 
                 Operations = orderGarment.Garment?.Operations?
                     .Select(OperationMapper.ToDto)
-                    .ToList() ?? new List<OperationDTO>()
+                    .ToList() ?? new List<OperationDTO>(),
+
+                Sizes = orderGarment.Sizes?.Select(s => new OrderGarmentSizeDTO
+                {
+                    SizeId = s.SizeId,
+                    SizeName = s.Size?.SizeName,
+                    Quantity = s.Quantity
+                }).ToList() ?? new List<OrderGarmentSizeDTO>()
             };
         }
     }

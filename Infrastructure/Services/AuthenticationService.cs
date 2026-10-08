@@ -107,7 +107,7 @@ public class AuthenticationService : IAuthenticationService
 
                 claims: claims,
 
-                expires: DateTime.UtcNow.AddHours(8),
+                expires: DateTime.UtcNow.AddHours(1),
 
                 signingCredentials: credentials);
 

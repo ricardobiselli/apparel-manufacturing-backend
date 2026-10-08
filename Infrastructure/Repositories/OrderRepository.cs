@@ -18,12 +18,20 @@ namespace Infrastructure.Repositories
         {
             return await _context.Set<Order>()
                 .Include(o => o.OrderGarments)
-                .ThenInclude(og => og.Garment)
-                .ThenInclude(g => g.Operations)
+                    .ThenInclude(og => og.Garment)
+                        .ThenInclude(g => g.Operations)
+                .Include(o => o.OrderGarments)
+                    .ThenInclude(og => og.Sizes)
+                        .ThenInclude(ogs => ogs.Size)
+                .Include(o => o.CutBatches)
+                    .ThenInclude(cb => cb.Sizes)
+                        .ThenInclude(sz => sz.Size)
+                .Include(o => o.CutBatches)
+                    .ThenInclude(cb => cb.Bundles)
+                        .ThenInclude(b => b.Sizes)
+                            .ThenInclude(bs => bs.Size)
                 .Include(o => o.MachineSessions)
                     .ThenInclude(ms => ms.Garment)
-                .Include(o => o.MachineSessions)
-                    //.ThenInclude(ms => ms.Operation)
                 .ToListAsync();
         }
 
@@ -34,10 +42,18 @@ namespace Infrastructure.Repositories
                 .Include(o => o.OrderGarments)
                     .ThenInclude(og => og.Garment)
                         .ThenInclude(g => g.Operations)
+                .Include(o => o.OrderGarments)
+                    .ThenInclude(og => og.Sizes)
+                        .ThenInclude(ogs => ogs.Size)
+                .Include(o => o.CutBatches)
+                    .ThenInclude(cb => cb.Sizes)
+                        .ThenInclude(sz => sz.Size)
+                .Include(o => o.CutBatches)
+                    .ThenInclude(cb => cb.Bundles)
+                        .ThenInclude(b => b.Sizes)
+                            .ThenInclude(bs => bs.Size)
                 .Include(o => o.MachineSessions)
                     .ThenInclude(ms => ms.Garment)
-                .Include(o => o.MachineSessions)
-                    //.ThenInclude(ms => ms.Operation)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
         }
 
