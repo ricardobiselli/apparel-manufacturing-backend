@@ -98,6 +98,12 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOperationLogService, OperationLogService>();
 builder.Services.AddScoped<IFabricRollService, FabricRollService>();
 
+// Cut & Bundle repositories and services
+builder.Services.AddScoped<ICutBatchRepository, CutBatchRepository>();
+builder.Services.AddScoped<IBundleRepository, BundleRepository>();
+builder.Services.AddScoped<ICutBatchService, CutBatchService>();
+builder.Services.AddScoped<IBundleService, BundleService>();
+
 //// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

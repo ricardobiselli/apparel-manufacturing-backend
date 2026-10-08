@@ -1,6 +1,7 @@
 ﻿using Application.Models;
 using Application.Models.Requests;
 using Domain.IRepositories;
+using Domain.Exceptions;
 using Application.Mappers;
 using Application.Interfaces;
 
@@ -19,6 +20,25 @@ public class OrderService : IOrderService
 
     public async Task<OrderDTO> AddAsync(AddOrderDTO addOrderDTO)
     {
+        // Validate per-garment sizes if provided
+        foreach (var og in addOrderDTO.OrderGarments)
+        {
+            if (og.Sizes != null && og.Sizes.Any())
+            {
+                if (og.Sizes.Any(s => s.Quantity < 0))
+                    throw new ServiceException("Order garment size quantities cannot be negative.");
+
+                var sum = og.Sizes.Sum(s => s.Quantity);
+                if (sum != og.Quantity)
+                    throw new ServiceException("Garment quantity must equal the sum of its size quantities.");
+            }
+            else
+            {
+                if (og.Quantity < 0)
+                    throw new ServiceException("Garment quantity cannot be negative.");
+            }
+        }
+
         var order = OrderMapper.ToEntity(addOrderDTO);
         var result = await _orderRepository.AddAsync(order);
         return OrderMapper.ToDto(result);

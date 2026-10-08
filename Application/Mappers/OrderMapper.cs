@@ -1,5 +1,6 @@
 ﻿using Application.Models;
 using Application.Models.Requests;
+using Domain.Enums;
 using Domain.Models;
 
 namespace Application.Mappers
@@ -13,6 +14,11 @@ namespace Application.Mappers
                 {
                     GarmentId = og.GarmentId,
                     Quantity = og.Quantity,
+                    Sizes = og.Sizes?.Select(s => new OrderGarmentSize
+                    {
+                        SizeId = s.SizeId,
+                        Quantity = s.Quantity
+                    }).ToList() ?? new List<OrderGarmentSize>()
                 })
                 .ToList();
 
@@ -25,7 +31,7 @@ namespace Application.Mappers
             return newOrder;
         }
 
-     
+
         public static OrderDTO ToDto(Order order)
         {
             return new OrderDTO
@@ -51,6 +57,61 @@ namespace Application.Mappers
                         StartedAt = ms.StartedAt,
                         EndedAt = ms.EndedAt,
                         Status = ms.Status
+                    })
+                    .ToList(),
+                FabricRolls = order.FabricRolls
+                 .Select(fr => new FabricRollDTO
+                 {
+                     FabricRollId = fr.FabricRollId,
+                     FabricRollName = fr.FabricRollName,
+                     Color = fr.Color,
+                     FabricRollDescription = fr.FabricRollDescription,
+                     WeightOrLength = fr.WeightOrLength,
+                     Yield = fr.Yield,
+                     Date = fr.Date,
+                     BarCode = fr.BarCode,
+                     Supplier = fr.Supplier,
+                     State = fr.State
+
+                 }).ToList(),
+
+                CutBatches = order.CutBatches
+                    .Select(cb => new CutBatchDTO
+                    {
+                        CutBatchId = cb.CutBatchId,
+                        OrderId = cb.OrderId,
+                          GarmentId = cb.GarmentId,
+                        PlannedQuantity= cb.PlannedQuantity,
+                        ActualQuantity = cb.ActualQuantity,
+                        CreatedAt = cb.CreatedAt,
+                        Sizes = cb.Sizes
+                            .Select(sz=> new CutBatchSizeDTO
+                            {
+                                    CutBatchId = sz.CutBatchId,
+                                SizeId = sz.SizeId,
+                                SizeName = sz.Size.SizeName,
+                                PlannedQuantity= sz.PlannedQuantity,
+                                ActualQuantity = sz.ActualQuantity
+                            })
+                            .ToList(),
+                        Bundles = cb.Bundles
+                            .Select(bd=>new BundleDTO
+                            {
+                                BundleId = bd.BundleId,
+                                CutBatchId = bd.CutBatchId,
+                                Quantity = bd.Quantity,
+                                Status = bd.Status, 
+                                CreatedAt = bd.CreatedAt,
+                                Sizes = bd.Sizes
+                                    .Select(sz => new BundleSizeDTO
+                                    {
+                                        BundleId = sz.BundleId,
+                                        SizeId = sz.SizeId,
+                                        Quantity = sz.Quantity
+                                    })
+                                    .ToList()
+                            })
+                            .ToList()
                     })
                     .ToList()
             };
