@@ -70,5 +70,13 @@ namespace Application.Services
 
             await _fabricRollRepository.UpdateAsync(existing);
         }
+
+        public async Task CommitFabricRoll(int id, CommitFabricRollDTO commitFabricDTO)
+        {
+            var fabricRoll = await _fabricRollRepository.GetByIdAsync(id);
+            fabricRoll.State = commitFabricDTO.State; 
+            await _fabricRollRepository.UpdateAsync(fabricRoll);
+        }
     }
+
 }

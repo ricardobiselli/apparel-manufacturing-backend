@@ -53,5 +53,12 @@ namespace ApparelManufacturingApp.Controllers
             await _fabricRollService.UpdateAsync(updateFabricRollDTO, id);
             return NoContent();
         }
+
+        [HttpPut("Commit/{id}")]
+        public async Task<ActionResult> CommitFabricRoll([FromRoute] int id, CommitFabricRollDTO commitFabricRoll)
+        {
+            await _fabricRollService.CommitFabricRoll(id, commitFabricRoll);
+            return NoContent();
+        }
     }
 }

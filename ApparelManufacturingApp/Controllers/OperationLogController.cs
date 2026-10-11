@@ -9,7 +9,6 @@ namespace ApparelManufacturingApp.Controllers;
 
 [Route("api/operationlogs")]
 [ApiController]
-[AllowAnonymous]
 
 public class OperationLogController : ControllerBase
 {
