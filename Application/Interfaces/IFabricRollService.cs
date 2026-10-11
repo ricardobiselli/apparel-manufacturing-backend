@@ -10,5 +10,6 @@ namespace Application.Interfaces
         Task<FabricRollDTO> GetByIdAsync(int id);
         Task DeleteAsync(int id);
         Task UpdateAsync(UpdateFabricRollDTO updateFabricRollDTO, int id);
+        Task CommitFabricRoll(int id, CommitFabricRollDTO commitFabricDTO);
     }
 }
