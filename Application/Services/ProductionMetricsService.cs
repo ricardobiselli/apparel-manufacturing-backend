@@ -147,4 +147,12 @@ public class ProductionMetricsService : IProductionMetricsService
                 .Sum(s => s.Duration.TotalSeconds)
         );
     }
+
+    private static TimeSpan CalculateOperationDeferredTime(List<TimeSegmentDTO> segments)
+    {
+        return TimeSpan.FromSeconds(
+            segments
+            .Where(s => s.Type == SegmentType.OperationDeferred)
+            .Sum(s => s.Duration.TotalSeconds));
+    }
 }
