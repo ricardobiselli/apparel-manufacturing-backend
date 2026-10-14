@@ -75,7 +75,7 @@ public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
                     case MachineExceptionType.WaitingForBundleOrSupplies:
                         return SegmentType.NonWorkingTime;
                     case MachineExceptionType.OperationDeferred:
-                        return SegmentType.NonWorkingTime;
+                        return SegmentType.OperationDeferred;
                     default:
                         return SegmentType.Unknown;
                 }
@@ -84,5 +84,4 @@ public class TimeSegmentsCalculator : IMachineSessionTimeCalculator
         }
     }
 }
-
 
