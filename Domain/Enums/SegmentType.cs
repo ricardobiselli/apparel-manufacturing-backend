@@ -7,6 +7,5 @@
     NonWorkingTime,
     EndOfDay,
     EndOfProduction,
-    Unknown,
-    OperationDeferred
+    Unknown
 }
