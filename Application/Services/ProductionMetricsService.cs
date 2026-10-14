@@ -44,6 +44,8 @@ public class ProductionMetricsService : IProductionMetricsService
         var machineIssueTime = CalculateMachineIssueTime(segments);
         var qualityIssueTime = CalculateQualityIssueTime(segments);
         var breakTime = CalculateBreakTime(segments);
+        var nonWorkingTime = CalculateNonWorkingTime(segments);
+
 
         var expectedUnits =
             currentSession.UnitsPerGarment * quantity;
@@ -137,4 +139,20 @@ public class ProductionMetricsService : IProductionMetricsService
         );
     }
 
+    private static TimeSpan CalculateNonWorkingTime(List<TimeSegmentDTO> segments)
+    {
+        return TimeSpan.FromSeconds(
+            segments
+                .Where(s => s.Type == SegmentType.NonWorkingTime)
+                .Sum(s => s.Duration.TotalSeconds)
+        );
+    }
+
+    private static TimeSpan CalculateOperationDeferredTime(List<TimeSegmentDTO> segments)
+    {
+        return TimeSpan.FromSeconds(
+            segments
+            .Where(s => s.Type == SegmentType.OperationDeferred)
+            .Sum(s => s.Duration.TotalSeconds));
+    }
 }
