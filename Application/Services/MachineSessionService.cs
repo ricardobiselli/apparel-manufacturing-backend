@@ -37,7 +37,6 @@ public class MachineSessionService : IMachineSessionService
             MachineId = dto.MachineId,
             GarmentId = dto.GarmentId,
             OperationId = operation.OperationId,
-            //UserId = dto.UserId,
             Status = dto.Status,
 
             // Snapshot
@@ -97,60 +96,76 @@ public class MachineSessionService : IMachineSessionService
     {
         await _machineSessionRepository.DeleteAsync(id);
     }
-    public async Task UpdateAsync(UpdateMachineSessionDTO updateMachineSessionDTO, int id)
+
+    public async Task UpdateAsync(UpdateMachineSessionDTO dto, int id)
     {
         var existing = await _machineSessionRepository.GetByIdAsync(id);
+
         if (existing == null)
-            throw new KeyNotFoundException($"MachineSession with id {id} not found.");
-        //
-        // REVISIT THIS PART LATER:
-        //
-        // If caller provided a user id (controller will set operator id), set it
-        if (updateMachineSessionDTO.UserId.HasValue)
-            existing.UserId = updateMachineSessionDTO.UserId.Value;
-
-        // Update status & timestamps with sensible defaults
-        if (updateMachineSessionDTO.Status.HasValue)
         {
-            var newStatus = updateMachineSessionDTO.Status.Value;
+            throw new KeyNotFoundException(
+                $"MachineSession with id {id} not found.");
+        }
 
-            // When an operator starts the session, set StartedAt if missing
-            if (newStatus == MachineSessionStatus.InProgress && existing.StartedAt == null)
+        // Update assigned operator
+        if (dto.UserId.HasValue)
+        {
+            existing.UserId = dto.UserId.Value;
+        }
+
+        // Handle status transitions
+        if (dto.Status.HasValue)
+        {
+            var newStatus = dto.Status.Value;
+
+            if (newStatus == MachineSessionStatus.InProgress)
             {
-                existing.StartedAt = updateMachineSessionDTO.StartedAt ?? DateTime.UtcNow;
+                if (existing.StartedAt == null)
+                {
+                    existing.StartedAt = DateTime.UtcNow;
+                }
             }
-
-            // When marking completed, set EndedAt if missing
-            if (newStatus == MachineSessionStatus.Completed && existing.EndedAt == null)
+            else if (newStatus == MachineSessionStatus.Completed)
             {
-                existing.EndedAt = updateMachineSessionDTO.EndedAt ?? DateTime.UtcNow;
+                if (existing.StartedAt == null)
+                {
+                    throw new InvalidOperationException(
+                        "Cannot complete a machine session that has not started.");
+                }
+
+                if (existing.EndedAt == null)
+                {
+                    existing.EndedAt = DateTime.UtcNow;
+                }
             }
 
             existing.Status = newStatus;
         }
-        else
-        {
-            // If status not provided, allow updating individual timestamps
-            if (updateMachineSessionDTO.StartedAt.HasValue)
-                existing.StartedAt = updateMachineSessionDTO.StartedAt.Value;
 
-            if (updateMachineSessionDTO.EndedAt.HasValue)
-                existing.EndedAt = updateMachineSessionDTO.EndedAt.Value;
+        // Update operation snapshot fields
+        if (dto.OperationName != null)
+        {
+            existing.OperationName = dto.OperationName;
         }
 
-        if (updateMachineSessionDTO.OperationName != null)
-            existing.OperationName = updateMachineSessionDTO.OperationName;
+        if (dto.OperationDescription != null)
+        {
+            existing.OperationDescription = dto.OperationDescription;
+        }
 
-        if (updateMachineSessionDTO.OperationDescription != null)
-            existing.OperationDescription = updateMachineSessionDTO.OperationDescription;
+        if (dto.BaseTime.HasValue)
+        {
+            existing.BaseTime = dto.BaseTime.Value;
+        }
 
-        if (updateMachineSessionDTO.BaseTime.HasValue)
-            existing.BaseTime = updateMachineSessionDTO.BaseTime.Value;
+        if (dto.UnitsPerGarment.HasValue)
+        {
+            existing.UnitsPerGarment = dto.UnitsPerGarment.Value;
+        }
 
-        if (updateMachineSessionDTO.UnitsPerGarment.HasValue)
-            existing.UnitsPerGarment = updateMachineSessionDTO.UnitsPerGarment.Value;
         await _machineSessionRepository.UpdateAsync(existing);
     }
+
 
     public async Task<ICollection<MachineSessionDTO>> GetAllSessionsExceptPendingOrInProgressByMachineId(int machineId)
     {
