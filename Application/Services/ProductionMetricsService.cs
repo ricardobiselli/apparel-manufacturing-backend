@@ -86,6 +86,8 @@ public class ProductionMetricsService : IProductionMetricsService
             CompletionPercentage = completionPercentage,
             AverageSecondsPerUnit = averageSecondsPerUnit,
             EfficiencyPercentage = efficiencyPercentage,
+            SessionCreateTime = currentSession.CreatedAt,
+            SessionStartTime = currentSession.StartedAt,
             SessionEndTime = currentSession.EndedAt,
             Segments = segments
         };

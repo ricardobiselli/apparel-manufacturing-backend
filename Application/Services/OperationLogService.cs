@@ -20,26 +20,59 @@ public class OperationLogService : IOperationLogService
         _orderRepository = orderRepository;
     }
 
-    public async Task<OperationLogDTO> AddOperationLogAsync(AddOperationLogDTO addOperationLogDTO)
+    //public async Task<OperationLogDTO> AddOperationLogAsync(AddOperationLogDTO addOperationLogDTO)
+    //{
+    //    var currentMachineSession = await _machineSessionRepository.GetByIdAsyncIncludingLogs(addOperationLogDTO.MachineSessionId);
+    //    if (currentMachineSession == null)
+    //        throw new KeyNotFoundException($"Machine session {addOperationLogDTO.MachineSessionId} not found.");
+
+    //    if (currentMachineSession.Status == MachineSessionStatus.Completed)
+    //        throw new InvalidOperationException("Cannot add an operation log to a completed machine session.");
+
+    //    if (currentMachineSession.Events.Count == null)
+    //    {
+    //        currentMachineSession.Status = MachineSessionStatus.InProgress;
+    //        currentMachineSession.StartedAt = DateTime.UtcNow;
+    //    }
+
+    //    var operationLog = OperationLogMapper.ToEntity(addOperationLogDTO);
+    //    var result = await _operationLogRepository.AddOperationLogAsync(operationLog);
+    //    return OperationLogMapper.ToDto(result);
+    //}
+
+
+    public async Task<OperationLogDTO> AddOperationLogAsync(
+        AddOperationLogDTO addOperationLogDTO)
     {
-        var currentMachineSession = await _machineSessionRepository.GetByIdAsyncIncludingLogs(addOperationLogDTO.MachineSessionId);
+        var currentMachineSession =
+            await _machineSessionRepository.GetByIdAsyncIncludingLogs(addOperationLogDTO.MachineSessionId);
+
         if (currentMachineSession == null)
-            throw new KeyNotFoundException($"Machine session {addOperationLogDTO.MachineSessionId} not found.");
+        {
+            throw new KeyNotFoundException(
+                $"Machine session {addOperationLogDTO.MachineSessionId} not found.");
+        }
 
         if (currentMachineSession.Status == MachineSessionStatus.Completed)
-            throw new InvalidOperationException("Cannot add an operation log to a completed machine session.");
-
-        if (currentMachineSession.Events.Count == 0)
         {
-            currentMachineSession.Status = MachineSessionStatus.InProgress;
+            throw new InvalidOperationException(
+                "Cannot add an operation log to a completed machine session.");
+        }
+
+        if (currentMachineSession.StartedAt == null)
+        {
             currentMachineSession.StartedAt = DateTime.UtcNow;
+            currentMachineSession.Status = MachineSessionStatus.InProgress;
+
+            await _machineSessionRepository.UpdateAsync(currentMachineSession);
         }
 
         var operationLog = OperationLogMapper.ToEntity(addOperationLogDTO);
+
         var result = await _operationLogRepository.AddOperationLogAsync(operationLog);
+
         return OperationLogMapper.ToDto(result);
     }
-
     public async Task<MachineExceptionLogDTO> AddMachineExceptionLogAsync(AddMachineExceptionLogDTO addMachineExceptionLogDTO)
     {
         var currentMachineSession = await _machineSessionRepository.GetByIdAsync(addMachineExceptionLogDTO.MachineSessionId);
@@ -49,10 +82,10 @@ public class OperationLogService : IOperationLogService
         if (currentMachineSession.Status == MachineSessionStatus.Completed)
             throw new InvalidOperationException("Cannot add an exception log to a completed machine session.");
 
-        if (currentMachineSession.Events.Count == 0)
+        if (currentMachineSession.StartedAt == null)
         {
-            currentMachineSession.Status = MachineSessionStatus.InProgress;
             currentMachineSession.StartedAt = DateTime.UtcNow;
+            currentMachineSession.Status = MachineSessionStatus.InProgress;
         }
 
         var machineExceptionLog = MachineExceptionLogMapper.ToEntity(addMachineExceptionLogDTO);
